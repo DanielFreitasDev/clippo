@@ -1,9 +1,9 @@
 // extension.js
 //
-// Orquestra o ciclo de vida do Clippo: liga o monitor de clipboard ao store de
-// histórico e ao popup, registra o atalho Super+V (tratando o conflito com a
-// bandeja de mensagens) e cria o ícone na barra. Como extensão do Shell, é
-// iniciada automaticamente no login.
+// Orchestrates Clippo's lifecycle: wires the clipboard monitor to the history
+// store and the popup, registers the Super+V shortcut (handling the conflict
+// with the message tray) and creates the panel icon. As a Shell extension, it
+// starts automatically at login.
 
 import Gio from 'gi://Gio';
 import Meta from 'gi://Meta';
@@ -39,7 +39,7 @@ export default class ClippoExtension extends Extension {
         this._popup = new ClipboardPopup();
         this._popup.connect('item-selected', (_p, text) => {
             this._clipboard.setClipboard(text);
-            this._store.add(text); // move o item escolhido para o topo
+            this._store.add(text); // move the chosen item to the top
         });
         this._popup.connect('item-pin-toggled', (_p, text) => {
             this._store.togglePin(text);
@@ -73,7 +73,7 @@ export default class ClippoExtension extends Extension {
     }
 
     disable() {
-        // Fecha o popup primeiro para liberar qualquer grab modal.
+        // Close the popup first to release any modal grab.
         if (this._popup)
             this._popup.dismiss();
 
@@ -100,7 +100,7 @@ export default class ClippoExtension extends Extension {
         }
 
         if (this._store) {
-            this._store.destroy(); // salva de forma síncrona
+            this._store.destroy(); // saves synchronously
             this._store = null;
         }
 
@@ -108,8 +108,8 @@ export default class ClippoExtension extends Extension {
     }
 
     _addKeybinding() {
-        // Conflito conhecido: no GNOME, toggle-message-tray usa ['<Super>v','<Super>m'].
-        // Removemos só o <Super>v (mantendo <Super>m) e restauramos no disable.
+        // Known conflict: on GNOME, toggle-message-tray uses ['<Super>v','<Super>m'].
+        // We strip only <Super>v (keeping <Super>m) and restore it on disable.
         this._shellKb = new Gio.Settings({ schema_id: SHELL_KB_SCHEMA });
         const tray = this._shellKb.get_strv(TRAY_KEY);
         this._removedTrayBinding = tray.includes(SUPER_V);

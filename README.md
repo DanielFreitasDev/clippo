@@ -1,97 +1,99 @@
 # Clippo
 
-Gerenciador de histórico da área de transferência para o **GNOME Shell** (Wayland),
-feito como extensão nativa do GNOME. Captura tudo que você copia e abre o histórico
-com **Super+V** na posição do mouse.
+**English** · [Português (Brasil)](README.pt-BR.md)
 
-## Recursos
+Clipboard history manager for the **GNOME Shell** (Wayland), built as a native
+GNOME extension. It captures everything you copy and opens your history at the
+pointer with **Super+V**.
 
-- Captura automática de tudo que é copiado (texto).
-- **Super+V** abre o popup na posição do cursor.
-- Histórico em ordem decrescente (a cópia mais recente no topo).
-- Mostra as **25** últimas cópias por padrão (configurável de 1 a 500).
-- Barra de busca com foco automático: digite para filtrar, apague para voltar à lista.
-- Navegação por teclado: **↑/↓** move, **Enter** seleciona, **Delete** remove, **Esc** fecha.
-- Selecionar um item devolve o conteúdo ao clipboard (cole com **Ctrl+V**) e fecha a janela.
-- A janela fecha ao selecionar, ao apertar Esc, ao clicar fora ou ao perder o foco.
-- **Itens fixados (favoritos):** clique na estrela; ficam no topo e não somem pelo limite.
-- **Limpar histórico:** botão da lixeira (mantém os fixados).
-- **Ícone na barra superior** (opcional) para abrir com o mouse.
-- Persiste entre logout/reboot em `~/.local/share/clippo/history.json` (permissões `600`).
-- Inicia junto com a sessão (extensões do Shell rodam no login, sem autostart).
+## Features
 
-## Por que uma extensão do GNOME?
+- Automatically captures everything you copy (text).
+- **Super+V** opens the popup at the pointer.
+- History in descending order (the most recent copy on top).
+- Shows the last **25** copies by default (configurable from 1 to 500).
+- Auto-focused search bar: type to filter, clear it to return to the full list.
+- Keyboard navigation: **↑/↓** to move, **Enter** to select, **Delete** to remove, **Esc** to close.
+- Selecting an item puts it back on the clipboard (paste with **Ctrl+V**) and closes the window.
+- The window closes on selection, on Esc, on click-outside, or when it loses focus.
+- **Pinned items (favorites):** click the star; they stay on top and never fall off the limit.
+- **Clear history:** the trash button (keeps the pinned items).
+- **Top-bar icon** (optional) to open it with the mouse.
+- Persists across logout/reboot in `~/.local/share/clippo/history.json` (`600` permissions).
+- Starts with your session (Shell extensions run at login — no autostart needed).
 
-No GNOME/Wayland, só o processo do Shell tem acesso privilegiado à área de transferência
-em segundo plano (`Meta.Selection`), pode registrar um atalho global como Super+V e
-posicionar a janela na posição do cursor. Apps independentes (CopyQ, etc.) não conseguem
-fazer isso no GNOME Wayland.
+## Why a GNOME extension?
 
-## Instalação
+On GNOME/Wayland, only the Shell process has privileged background access to the
+clipboard (`Meta.Selection`), can register a global shortcut like Super+V, and
+can place a window at the pointer. Standalone apps (CopyQ, etc.) can't do this on
+GNOME Wayland.
+
+## Installation
 
 ```bash
 ./install.sh
 ```
 
-Depois:
+Then:
 
-1. **Faça logout e login** (no Wayland o gnome-shell não pode ser reiniciado em sessão).
-2. Habilite:
+1. **Log out and back in** (on Wayland gnome-shell can't be restarted in-session).
+2. Enable it:
    ```bash
    gnome-extensions enable clippo@daniel.local
    ```
-3. Pressione **Super+V**.
+3. Press **Super+V**.
 
-> O Clippo assume o atalho **Super+V** (normalmente usado pela *bandeja de mensagens*)
-> enquanto está ativo; o **Super+M** continua abrindo a bandeja. Ao desabilitar a
-> extensão, o Super+V é devolvido à bandeja.
+> While it's active, Clippo takes over the **Super+V** shortcut (normally used by
+> the *message tray*); **Super+M** still opens the tray. When you disable the
+> extension, Super+V is handed back to the tray.
 
-## Preferências
+## Preferences
 
 ```bash
 gnome-extensions prefs clippo@daniel.local
 ```
 
-Permite ajustar o número de itens, mostrar/ocultar o ícone da barra e trocar o atalho.
+Lets you adjust the number of items, show/hide the top-bar icon, and change the shortcut.
 
-## Desenvolvimento
+## Development
 
-A extensão é JavaScript puro (GJS, ESM, GNOME 45+), **sem etapa de build** — os arquivos
-do projeto são o próprio código (via symlink do `install.sh`).
+The extension is pure JavaScript (GJS, ESM, GNOME 45+), with **no build step** —
+the project files are the code itself (symlinked by `install.sh`).
 
-- Aplicar mudanças no código: **logout/login** (limitação do Wayland).
-- Re-rodar `enable()`/`disable()` sem novo código:
+- To apply code changes: **log out / back in** (a Wayland limitation).
+- To re-run `enable()`/`disable()` without new code:
   ```bash
   gnome-extensions disable clippo@daniel.local && gnome-extensions enable clippo@daniel.local
   ```
-- Logs do shell:
+- Shell logs:
   ```bash
   journalctl -f -o cat /usr/bin/gnome-shell
   ```
-- Console interativo: `Alt+F2` → `lg` → Enter (Looking Glass).
-- Ao mudar `schemas/*.gschema.xml`, recompile: `glib-compile-schemas schemas/`.
+- Interactive console: `Alt+F2` → `lg` → Enter (Looking Glass).
+- After changing `schemas/*.gschema.xml`, recompile: `glib-compile-schemas schemas/`.
 
-### Empacotar para distribuição
+### Packaging for distribution
 
 ```bash
 gnome-extensions pack --extra-source=lib --extra-source=stylesheet.css .
 gnome-extensions install --force clippo@daniel.local.shell-extension.zip
 ```
 
-## Estrutura
+## Structure
 
-| Arquivo | Função |
+| File | Role |
 |---|---|
-| `extension.js` | Ciclo de vida; conecta monitor ↔ store ↔ popup ↔ ícone; atalho. |
-| `lib/clipboardManager.js` | Monitora o clipboard (`Meta.Selection`), emite `text-copied`. |
-| `lib/historyStore.js` | Histórico + fixados em memória e em JSON atômico. |
-| `lib/clipboardPopup.js` | UI do popup: busca, lista, teclado, grab modal, fechamento. |
-| `lib/indicator.js` | Ícone na barra superior. |
-| `prefs.js` | Preferências (libadwaita). |
-| `schemas/` | Schema GSettings (`max-items`, `toggle-clippo`, `show-indicator`). |
+| `extension.js` | Lifecycle; wires monitor ↔ store ↔ popup ↔ icon; shortcut. |
+| `lib/clipboardManager.js` | Watches the clipboard (`Meta.Selection`), emits `text-copied`. |
+| `lib/historyStore.js` | History + pinned items in memory and in atomic JSON. |
+| `lib/clipboardPopup.js` | Popup UI: search, list, keyboard, modal grab, dismissal. |
+| `lib/indicator.js` | Top-bar icon. |
+| `prefs.js` | Preferences (libadwaita). |
+| `schemas/` | GSettings schema (`max-items`, `toggle-clippo`, `show-indicator`). |
 
-## Limitações conhecidas / futuro
+## Known limitations / roadmap
 
-- **Somente texto** na v1 (imagens ficam para depois).
-- O Clippo captura **senhas** copiadas como qualquer texto. Mitigação atual: arquivo `600`.
-  Futuro: modo privado, ignorar conteúdo sensível e exclusão de apps.
+- **Text only** in v1 (images come later).
+- Clippo captures copied **passwords** like any other text. Current mitigation: the `600` file.
+  Future: a private mode, ignoring sensitive content, and per-app exclusions.

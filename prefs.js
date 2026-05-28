@@ -1,7 +1,7 @@
 // prefs.js
 //
-// Janela de preferências (libadwaita): número de itens, ícone na barra e o
-// atalho de teclado (editável). Roda em um processo separado do gnome-shell.
+// Preferences window (libadwaita): number of items, panel icon and the
+// (editable) keyboard shortcut. Runs in a separate process from gnome-shell.
 
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk';
@@ -26,13 +26,13 @@ export default class ClippoPreferences extends ExtensionPreferences {
         const page = new Adw.PreferencesPage();
         window.add(page);
 
-        // --- Comportamento ---
-        const behavior = new Adw.PreferencesGroup({ title: 'Comportamento' });
+        // --- Behavior ---
+        const behavior = new Adw.PreferencesGroup({ title: 'Behavior' });
         page.add(behavior);
 
         const maxRow = new Adw.SpinRow({
-            title: 'Itens no histórico',
-            subtitle: 'Quantas cópias manter (mais recentes primeiro)',
+            title: 'History items',
+            subtitle: 'How many copies to keep (most recent first)',
             adjustment: new Gtk.Adjustment({
                 lower: 1,
                 upper: 500,
@@ -44,28 +44,28 @@ export default class ClippoPreferences extends ExtensionPreferences {
         settings.bind('max-items', maxRow, 'value', Gio.SettingsBindFlags.DEFAULT);
 
         const indicatorRow = new Adw.SwitchRow({
-            title: 'Mostrar ícone na barra superior',
-            subtitle: 'Abrir o histórico clicando no ícone, além do atalho',
+            title: 'Show icon in the top bar',
+            subtitle: 'Open the history by clicking the icon, in addition to the shortcut',
         });
         behavior.add(indicatorRow);
         settings.bind('show-indicator', indicatorRow, 'active', Gio.SettingsBindFlags.DEFAULT);
 
-        // --- Atalho ---
+        // --- Shortcut ---
         const shortcutGroup = new Adw.PreferencesGroup({
-            title: 'Atalho',
-            description: 'Enquanto o Clippo está ativo, ele assume o Super+V ' +
-                '(normalmente usado pela bandeja de mensagens); o Super+M continua funcionando.',
+            title: 'Shortcut',
+            description: 'While Clippo is active it takes over Super+V ' +
+                '(normally used by the message tray); Super+M keeps working.',
         });
         page.add(shortcutGroup);
 
         const shortcutRow = new Adw.ActionRow({
-            title: 'Abrir histórico',
-            subtitle: 'Clique para definir; Backspace limpa; Esc cancela',
+            title: 'Open history',
+            subtitle: 'Click to set; Backspace clears; Esc cancels',
             activatable: true,
         });
         const shortcutLabel = new Gtk.ShortcutLabel({
             valign: Gtk.Align.CENTER,
-            disabled_text: 'Desativado',
+            disabled_text: 'Disabled',
         });
         const syncLabel = () => {
             const accels = settings.get_strv('toggle-clippo');
@@ -84,14 +84,14 @@ export default class ClippoPreferences extends ExtensionPreferences {
         const dialog = new Gtk.Window({
             modal: true,
             transient_for: parent,
-            title: 'Novo atalho',
+            title: 'New shortcut',
             default_width: 380,
             default_height: 140,
             resizable: false,
         });
         dialog.set_child(new Gtk.Label({
-            label: 'Pressione a nova combinação de teclas…\n\n' +
-                'Backspace para limpar · Esc para cancelar',
+            label: 'Press the new key combination…\n\n' +
+                'Backspace to clear · Esc to cancel',
             justify: Gtk.Justification.CENTER,
         }));
 
@@ -109,7 +109,7 @@ export default class ClippoPreferences extends ExtensionPreferences {
                 dialog.close();
                 return Gdk.EVENT_STOP;
             }
-            // espera uma tecla "real" junto de um modificador
+            // expect a "real" key together with a modifier
             if (MODIFIER_KEYVALS.includes(keyval))
                 return Gdk.EVENT_STOP;
             if (mask === 0)

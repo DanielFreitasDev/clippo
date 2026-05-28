@@ -6,20 +6,20 @@
     <key name="max-items" type="i">
       <default>25</default>
       <range min="1" max="500"/>
-      <summary>Máximo de itens no histórico</summary>
-      <description>Quantas cópias manter no histórico, das mais recentes para as mais antigas.</description>
+      <summary>Maximum number of history items</summary>
+      <description>How many copies to keep in the history, from most recent to oldest.</description>
     </key>
 
     <key name="toggle-clippo" type="as">
       <default><![CDATA[['<Super>v']]]></default>
-      <summary>Abrir o histórico</summary>
-      <description>Atalho de teclado que abre o popup do Clippo.</description>
+      <summary>Open the history</summary>
+      <description>Keyboard shortcut that opens the Clippo popup.</description>
     </key>
 
     <key name="show-indicator" type="b">
       <default>true</default>
-      <summary>Mostrar ícone na barra superior</summary>
-      <description>Exibe um ícone na barra do GNOME para abrir o histórico com o mouse.</description>
+      <summary>Show icon in the top bar</summary>
+      <description>Shows an icon in the GNOME panel to open the history with the mouse.</description>
     </key>
 
   </schema>
