@@ -1,0 +1,70 @@
+/* Clippo — estilo do popup */
+
+.clippo-popup {
+    background-color: rgba(36, 36, 38, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 14px;
+    padding: 8px;
+    width: 440px;
+    color: #ffffff;
+}
+
+.clippo-header {
+    spacing: 6px;
+    padding-bottom: 6px;
+}
+
+.clippo-search {
+    border-radius: 9px;
+}
+
+.clippo-search-icon {
+    icon-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.clippo-icon-button {
+    border-radius: 9px;
+    padding: 6px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.clippo-icon-button:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.clippo-scroll {
+    max-height: 460px;
+}
+
+.clippo-list {
+    spacing: 2px;
+}
+
+.clippo-row {
+    border-radius: 9px;
+    spacing: 2px;
+}
+
+.clippo-row-selected {
+    background-color: rgba(120, 170, 255, 0.28);
+}
+
+.clippo-row-pinned .clippo-item-button {
+    font-weight: bold;
+}
+
+.clippo-item-button {
+    padding: 9px 10px;
+    border-radius: 9px;
+    color: #ffffff;
+}
+
+.clippo-item-button:hover {
+    background-color: rgba(255, 255, 255, 0.10);
+}
+
+.clippo-empty {
+    padding: 18px;
+    color: rgba(255, 255, 255, 0.55);
+}

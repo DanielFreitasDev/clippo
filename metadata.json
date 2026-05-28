@@ -1,0 +1,9 @@
+{
+    "uuid": "clippo@daniel.local",
+    "name": "Clippo",
+    "description": "Gerenciador de histórico da área de transferência integrado ao GNOME. Captura tudo que você copia e abre o histórico com Super+V na posição do mouse, com busca, itens fixados e persistência entre sessões.",
+    "version": 1,
+    "version-name": "1.0.0",
+    "shell-version": ["48", "49", "50"],
+    "settings-schema": "org.gnome.shell.extensions.clippo"
+}

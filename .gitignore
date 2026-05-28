@@ -1,0 +1,12 @@
+# Artefato de build (gerado por glib-compile-schemas / gnome-extensions install)
+schemas/gschemas.compiled
+
+# Extensão empacotada
+*.shell-extension.zip
+
+# Dependências de ferramentas (dev)
+node_modules/
+
+# Editor / SO
+*~
+.DS_Store
