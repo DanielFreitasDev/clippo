@@ -21,6 +21,7 @@ com **Super+V** na posição do mouse.
 - **Ícone na barra superior** (opcional) para abrir com o mouse.
 - Persiste entre logout/reboot em `~/.local/share/clippo/history.json` (permissões `600`).
 - Inicia junto com a sessão (extensões do Shell rodam no login, sem autostart).
+- **UI localizada:** acompanha o idioma do sistema — inglês e português do Brasil inclusos, com inglês como padrão.
 
 ## Por que uma extensão do GNOME?
 
@@ -73,6 +74,22 @@ do projeto são o próprio código (via symlink do `install.sh`).
 - Console interativo: `Alt+F2` → `lg` → Enter (Looking Glass).
 - Ao mudar `schemas/*.gschema.xml`, recompile: `glib-compile-schemas schemas/`.
 
+### Traduções
+
+A UI é localizada com gettext (domínio `clippo`). As strings de origem estão em
+inglês; as traduções ficam em `po/<idioma>.po` e são compiladas para
+`locale/<idioma>/LC_MESSAGES/clippo.mo` pelo `install.sh` (requer o pacote
+`gettext` — `sudo apt install gettext`). Sem tradução compilada para o idioma
+ativo, a UI cai no inglês.
+
+Para adicionar um idioma, copie `po/clippo.pot` para `po/<idioma>.po` (ex.:
+`po/fr.po`), preencha cada `msgstr` e rode `./install.sh` de novo. Ao mudar as
+strings no código, regenere o template:
+
+```bash
+xgettext --from-code=UTF-8 -L JavaScript --keyword=_ -o po/clippo.pot prefs.js lib/*.js
+```
+
 ### Empacotar para distribuição
 
 ```bash
@@ -91,6 +108,7 @@ gnome-extensions install --force clippo@daniel.local.shell-extension.zip
 | `lib/indicator.js` | Ícone na barra superior. |
 | `prefs.js` | Preferências (libadwaita). |
 | `schemas/` | Schema GSettings (`max-items`, `toggle-clippo`, `show-indicator`). |
+| `po/` | Catálogos de tradução (gettext); compilados para `locale/` na instalação. |
 
 ## Limitações conhecidas / futuro
 

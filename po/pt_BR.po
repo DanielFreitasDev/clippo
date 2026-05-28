@@ -1,0 +1,77 @@
+# Brazilian Portuguese translation for Clippo.
+# Copyright (C) 2026 Daniel Freitas
+# This file is distributed under the same license as the clippo package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: clippo\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-27 00:00+0000\n"
+"PO-Revision-Date: 2026-05-27 00:00+0000\n"
+"Last-Translator: Daniel Freitas\n"
+"Language-Team: Brazilian Portuguese\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: lib/clipboardPopup.js
+msgid "Search…"
+msgstr "Buscar…"
+
+#: lib/clipboardPopup.js
+msgid "No items in history"
+msgstr "Nenhum item no histórico"
+
+#: prefs.js
+msgid "Behavior"
+msgstr "Comportamento"
+
+#: prefs.js
+msgid "History items"
+msgstr "Itens no histórico"
+
+#: prefs.js
+msgid "How many copies to keep (most recent first)"
+msgstr "Quantas cópias manter (mais recentes primeiro)"
+
+#: prefs.js
+msgid "Show icon in the top bar"
+msgstr "Mostrar ícone na barra superior"
+
+#: prefs.js
+msgid "Open the history by clicking the icon, in addition to the shortcut"
+msgstr "Abrir o histórico clicando no ícone, além do atalho"
+
+#: prefs.js
+msgid "Shortcut"
+msgstr "Atalho"
+
+#: prefs.js
+msgid ""
+"While Clippo is active it takes over Super+V (normally used by the message "
+"tray); Super+M keeps working."
+msgstr ""
+"Enquanto o Clippo está ativo, ele assume o Super+V (normalmente usado pela "
+"bandeja de mensagens); o Super+M continua funcionando."
+
+#: prefs.js
+msgid "Open history"
+msgstr "Abrir histórico"
+
+#: prefs.js
+msgid "Click to set; Backspace clears; Esc cancels"
+msgstr "Clique para definir; Backspace limpa; Esc cancela"
+
+#: prefs.js
+msgid "Disabled"
+msgstr "Desativado"
+
+#: prefs.js
+msgid "New shortcut"
+msgstr "Novo atalho"
+
+#: prefs.js
+msgid "Press the new key combination…\n\nBackspace to clear · Esc to cancel"
+msgstr "Pressione a nova combinação de teclas…\n\nBackspace para limpar · Esc para cancelar"

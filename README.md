@@ -21,6 +21,7 @@ pointer with **Super+V**.
 - **Top-bar icon** (optional) to open it with the mouse.
 - Persists across logout/reboot in `~/.local/share/clippo/history.json` (`600` permissions).
 - Starts with your session (Shell extensions run at login — no autostart needed).
+- **Localized UI:** follows your system language — English and Brazilian Portuguese included, with English as the fallback.
 
 ## Why a GNOME extension?
 
@@ -73,10 +74,26 @@ the project files are the code itself (symlinked by `install.sh`).
 - Interactive console: `Alt+F2` → `lg` → Enter (Looking Glass).
 - After changing `schemas/*.gschema.xml`, recompile: `glib-compile-schemas schemas/`.
 
+### Translations
+
+The UI is localized with gettext (domain `clippo`). Source strings are in
+English; translations live in `po/<lang>.po` and are compiled to
+`locale/<lang>/LC_MESSAGES/clippo.mo` by `install.sh` (needs the `gettext`
+package — `sudo apt install gettext`). With no compiled translation for the
+active locale, the UI falls back to English.
+
+To add a language, copy `po/clippo.pot` to `po/<lang>.po` (e.g. `po/fr.po`),
+fill in each `msgstr`, and re-run `./install.sh`. After changing strings in the
+code, regenerate the template:
+
+```bash
+xgettext --from-code=UTF-8 -L JavaScript --keyword=_ -o po/clippo.pot prefs.js lib/*.js
+```
+
 ### Packaging for distribution
 
 ```bash
-gnome-extensions pack --extra-source=lib --extra-source=stylesheet.css .
+gnome-extensions pack --extra-source=lib --extra-source=stylesheet.css --podir=po .
 gnome-extensions install --force clippo@daniel.local.shell-extension.zip
 ```
 
@@ -91,6 +108,7 @@ gnome-extensions install --force clippo@daniel.local.shell-extension.zip
 | `lib/indicator.js` | Top-bar icon. |
 | `prefs.js` | Preferences (libadwaita). |
 | `schemas/` | GSettings schema (`max-items`, `toggle-clippo`, `show-indicator`). |
+| `po/` | Translation catalogs (gettext); compiled to `locale/` at install. |
 
 ## Known limitations / roadmap
 

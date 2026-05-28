@@ -8,7 +8,7 @@ import Gtk from 'gi://Gtk';
 import Gdk from 'gi://Gdk';
 import Gio from 'gi://Gio';
 
-import { ExtensionPreferences } from 'resource:///org/gnome/shell/extensions/prefs.js';
+import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/shell/extensions/prefs.js';
 
 const MODIFIER_KEYVALS = [
     Gdk.KEY_Shift_L, Gdk.KEY_Shift_R,
@@ -27,12 +27,12 @@ export default class ClippoPreferences extends ExtensionPreferences {
         window.add(page);
 
         // --- Behavior ---
-        const behavior = new Adw.PreferencesGroup({ title: 'Behavior' });
+        const behavior = new Adw.PreferencesGroup({ title: _('Behavior') });
         page.add(behavior);
 
         const maxRow = new Adw.SpinRow({
-            title: 'History items',
-            subtitle: 'How many copies to keep (most recent first)',
+            title: _('History items'),
+            subtitle: _('How many copies to keep (most recent first)'),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
                 upper: 500,
@@ -44,28 +44,27 @@ export default class ClippoPreferences extends ExtensionPreferences {
         settings.bind('max-items', maxRow, 'value', Gio.SettingsBindFlags.DEFAULT);
 
         const indicatorRow = new Adw.SwitchRow({
-            title: 'Show icon in the top bar',
-            subtitle: 'Open the history by clicking the icon, in addition to the shortcut',
+            title: _('Show icon in the top bar'),
+            subtitle: _('Open the history by clicking the icon, in addition to the shortcut'),
         });
         behavior.add(indicatorRow);
         settings.bind('show-indicator', indicatorRow, 'active', Gio.SettingsBindFlags.DEFAULT);
 
         // --- Shortcut ---
         const shortcutGroup = new Adw.PreferencesGroup({
-            title: 'Shortcut',
-            description: 'While Clippo is active it takes over Super+V ' +
-                '(normally used by the message tray); Super+M keeps working.',
+            title: _('Shortcut'),
+            description: _('While Clippo is active it takes over Super+V (normally used by the message tray); Super+M keeps working.'),
         });
         page.add(shortcutGroup);
 
         const shortcutRow = new Adw.ActionRow({
-            title: 'Open history',
-            subtitle: 'Click to set; Backspace clears; Esc cancels',
+            title: _('Open history'),
+            subtitle: _('Click to set; Backspace clears; Esc cancels'),
             activatable: true,
         });
         const shortcutLabel = new Gtk.ShortcutLabel({
             valign: Gtk.Align.CENTER,
-            disabled_text: 'Disabled',
+            disabled_text: _('Disabled'),
         });
         const syncLabel = () => {
             const accels = settings.get_strv('toggle-clippo');
@@ -84,14 +83,13 @@ export default class ClippoPreferences extends ExtensionPreferences {
         const dialog = new Gtk.Window({
             modal: true,
             transient_for: parent,
-            title: 'New shortcut',
+            title: _('New shortcut'),
             default_width: 380,
             default_height: 140,
             resizable: false,
         });
         dialog.set_child(new Gtk.Label({
-            label: 'Press the new key combination…\n\n' +
-                'Backspace to clear · Esc to cancel',
+            label: _('Press the new key combination…\n\nBackspace to clear · Esc to cancel'),
             justify: Gtk.Justification.CENTER,
         }));
 

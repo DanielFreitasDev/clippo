@@ -13,6 +13,22 @@ DEST="$HOME/.local/share/gnome-shell/extensions/$UUID"
 # Compile the schemas in the project itself (required in symlink mode).
 glib-compile-schemas "$SRC/schemas"
 
+# Compile translations (po/<lang>.po -> locale/<lang>/LC_MESSAGES/clippo.mo).
+# Optional: without them — or without gettext installed — the UI stays English.
+if command -v msgfmt >/dev/null 2>&1; then
+    for po in "$SRC"/po/*.po; do
+        [ -e "$po" ] || continue
+        lang="$(basename "$po" .po)"
+        mo_dir="$SRC/locale/$lang/LC_MESSAGES"
+        mkdir -p "$mo_dir"
+        msgfmt "$po" -o "$mo_dir/clippo.mo"
+        echo "Compiled translation: $lang"
+    done
+else
+    echo "warning: 'msgfmt' not found — skipping translations (UI stays English)." >&2
+    echo "         install it with: sudo apt install gettext, then re-run ./install.sh" >&2
+fi
+
 mkdir -p "$(dirname "$DEST")"
 ln -sfn "$SRC" "$DEST"
 

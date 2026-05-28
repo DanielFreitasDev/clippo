@@ -1,0 +1,75 @@
+# Clippo — translation template.
+# Copyright (C) 2026 Daniel Freitas
+# This file is distributed under the same license as the clippo package.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: clippo\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-27 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: lib/clipboardPopup.js
+msgid "Search…"
+msgstr ""
+
+#: lib/clipboardPopup.js
+msgid "No items in history"
+msgstr ""
+
+#: prefs.js
+msgid "Behavior"
+msgstr ""
+
+#: prefs.js
+msgid "History items"
+msgstr ""
+
+#: prefs.js
+msgid "How many copies to keep (most recent first)"
+msgstr ""
+
+#: prefs.js
+msgid "Show icon in the top bar"
+msgstr ""
+
+#: prefs.js
+msgid "Open the history by clicking the icon, in addition to the shortcut"
+msgstr ""
+
+#: prefs.js
+msgid "Shortcut"
+msgstr ""
+
+#: prefs.js
+msgid ""
+"While Clippo is active it takes over Super+V (normally used by the message "
+"tray); Super+M keeps working."
+msgstr ""
+
+#: prefs.js
+msgid "Open history"
+msgstr ""
+
+#: prefs.js
+msgid "Click to set; Backspace clears; Esc cancels"
+msgstr ""
+
+#: prefs.js
+msgid "Disabled"
+msgstr ""
+
+#: prefs.js
+msgid "New shortcut"
+msgstr ""
+
+#: prefs.js
+msgid "Press the new key combination…\n\nBackspace to clear · Esc to cancel"
+msgstr ""

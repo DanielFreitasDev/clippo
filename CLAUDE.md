@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Clippo is a **GNOME Shell extension** (UUID `clippo@daniel.local`) that adds clipboard history — not a standalone app. On GNOME/Wayland only the Shell process can read the clipboard in the background (`Meta.Selection`), register a global shortcut, and place a window at the pointer, so this lives inside the Shell as an extension.
 
-Plain **GJS / ESM, no build step** — the files in this directory *are* the running code (installed via symlink). Targets GNOME Shell 48–50. Code comments and UI strings are in US English; a Portuguese README (`README.pt-BR.md`) is kept for Brazilian readers.
+Plain **GJS / ESM, no build step** — the files in this directory *are* the running code (installed via symlink). Targets GNOME Shell 48–50. Code comments are in US English. UI strings are English at the source and localized via gettext (domain `clippo`): translations live in `po/*.po`, compiled to `locale/` by `install.sh`; pt_BR ships, other locales fall back to the English source. A Portuguese README (`README.pt-BR.md`) is also kept for Brazilian readers.
 
 ## Development
 
@@ -15,6 +15,7 @@ Plain **GJS / ESM, no build step** — the files in this directory *are* the run
 - After editing `extension.js` / `lib/*`: **log out and back in**, then `gnome-extensions enable clippo@daniel.local`.
 - To re-run `enable()`/`disable()` without new code (e.g. testing lifecycle teardown): `gnome-extensions disable clippo@daniel.local && gnome-extensions enable clippo@daniel.local`.
 - After editing `schemas/*.gschema.xml`: `glib-compile-schemas schemas/` (install.sh also does this).
+- After editing UI strings or `po/*.po`: re-run `install.sh` to recompile the `.mo` files (needs `gettext`/`msgfmt`). Regenerate the template with `xgettext --from-code=UTF-8 -L JavaScript --keyword=_ -o po/clippo.pot prefs.js lib/*.js`.
 - Logs: `journalctl -f -o cat /usr/bin/gnome-shell` (emit with `console.*` / `logError` from GJS).
 - Interactive inspection: `Alt+F2` → `lg` (Looking Glass).
 - Preferences window: `gnome-extensions prefs clippo@daniel.local`.
@@ -41,3 +42,4 @@ Components:
 - **GNOME 48–50 API drift:** `St.ScrollView` child-setting and the scroll `vadjustment` getter changed across these versions; `clipboardPopup.js` has fallback shims (`_setScrollChild`, `_ensureRowVisible`). Keep new platform calls tolerant across the declared `shell-version` range.
 - **Settings live in `schemas/`** (`max-items`, `toggle-clippo`, `show-indicator`). `extension.js` reacts to `changed::max-items` and `changed::show-indicator` at runtime; `prefs.js` (separate process, libadwaita) edits them and includes custom key-capture for `toggle-clippo`.
 - **v1 is text-only** and captures **passwords like any other text** (only mitigation is the 0600 file). No private mode yet.
+- **i18n:** user-facing strings are wrapped in `_()`; `lib/clipboardPopup.js` imports `gettext as _` from the extension resource module and `prefs.js` from the prefs resource module, both resolving the `clippo` domain set by `gettext-domain` in `metadata.json`. The base `Extension`/`ExtensionPreferences` classes auto-init translations. Keep new UI strings wrapped and add their `msgstr` to `po/*.po`; never let a string bypass `_()` or it won't translate.
