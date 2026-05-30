@@ -8,12 +8,12 @@ com **Super+V** na posição do mouse.
 
 ## Recursos
 
-- Captura automática de tudo que é copiado (texto).
+- Captura automática de tudo que é copiado como texto (cópias marcadas como secretas por um gerenciador de senhas são ignoradas).
 - **Super+V** abre o popup na posição do cursor.
 - Histórico em ordem decrescente (a cópia mais recente no topo).
 - Mostra as **25** últimas cópias por padrão (configurável de 1 a 500).
 - Barra de busca com foco automático: digite para filtrar, apague para voltar à lista.
-- Navegação por teclado: **↑/↓** move, **Enter** seleciona, **Delete** remove, **Esc** fecha.
+- Navegação por teclado: **↑/↓** move, **Enter** seleciona, **Delete** remove (**Shift+Delete** durante a busca), **Esc** fecha.
 - Selecionar um item devolve o conteúdo ao clipboard (cole com **Ctrl+V**) e fecha a janela.
 - A janela fecha ao selecionar, ao apertar Esc, ao clicar fora ou ao perder o foco.
 - **Itens fixados (favoritos):** clique na estrela; ficam no topo e não somem pelo limite.
@@ -113,5 +113,5 @@ gnome-extensions install --force clippo@daniel.local.shell-extension.zip
 ## Limitações conhecidas / futuro
 
 - **Somente texto** na v1 (imagens ficam para depois).
-- O Clippo captura **senhas** copiadas como qualquer texto. Mitigação atual: arquivo `600`.
-  Futuro: modo privado, ignorar conteúdo sensível e exclusão de apps.
+- O Clippo ignora cópias que um **gerenciador de senhas** marca como secretas (pelo hint `x-kde-passwordManagerHint`), mas uma senha copiada de outro lugar ainda é capturada como texto comum (mitigação: arquivo `600`).
+  Futuro: modo privado completo e exclusão por app.
