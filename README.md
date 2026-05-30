@@ -3,23 +3,25 @@
 **English** · [Português (Brasil)](README.pt-BR.md)
 
 Clipboard history manager for the **GNOME Shell** (Wayland), built as a native
-GNOME extension. It captures everything you copy and opens your history at the
-pointer with **Super+V**.
+GNOME extension. It captures the text **and images** you copy and opens your
+history at the pointer with **Super+V**.
 
 ## Features
 
-- Automatically captures everything you copy as text (copies a password manager marks as secret are skipped).
+- Captures text and, optionally, **images** you copy.
 - **Super+V** opens the popup at the pointer.
-- History in descending order (the most recent copy on top).
+- History in descending order (most recent on top), each item showing **how long ago** it was copied.
 - Shows the last **25** copies by default (configurable from 1 to 500).
 - Auto-focused search bar: type to filter, clear it to return to the full list.
-- Keyboard navigation: **↑/↓** to move, **Enter** to select, **Delete** to remove (**Shift+Delete** while searching), **Esc** to close.
+- Keyboard navigation: **↑/↓** to move, **→** for item details, **Enter** to select, **Delete** to remove (**Shift+Delete** while searching), **Esc** to close.
 - Selecting an item puts it back on the clipboard (paste with **Ctrl+V**) and closes the window.
-- The window closes on selection, on Esc, on click-outside, or when it loses focus.
+- **Content-type detection:** links, colors, e-mails and code get a fitting icon/swatch, with a quick **open** action for links and e-mails.
+- **Edit before paste** and **QR code** generation for any text item (handy for sending a link to your phone).
 - **Pinned items (favorites):** click the star; they stay on top and never fall off the limit.
+- **Privacy:** a **private mode** to pause capture (also a Quick Settings toggle); copies a password manager marks as secret are skipped; optional **per-app exclusion**; whitespace trimming; and optional primary-selection (middle-click) capture.
 - **Clear history:** the trash button (keeps the pinned items).
 - **Top-bar icon** (optional) to open it with the mouse.
-- Persists across logout/reboot in `~/.local/share/clippo/history.json` (`600` permissions).
+- Persists across logout/reboot in `~/.local/share/clippo/` (`600` permissions; images as separate PNGs).
 - Starts with your session (Shell extensions run at login — no autostart needed).
 - **Localized UI:** follows your system language — English and Brazilian Portuguese included, with English as the fallback.
 
@@ -55,7 +57,7 @@ Then:
 gnome-extensions prefs clippo@daniel.local
 ```
 
-Lets you adjust the number of items, show/hide the top-bar icon, and change the shortcut.
+Lets you adjust the number of items; toggle the top-bar icon, content-type detection, image capture, private mode, whitespace trimming and primary-selection capture; manage the excluded-apps list; and change the shortcut.
 
 ## Development
 
@@ -87,7 +89,7 @@ fill in each `msgstr`, and re-run `./install.sh`. After changing strings in the
 code, regenerate the template:
 
 ```bash
-xgettext --from-code=UTF-8 -L JavaScript --keyword=_ -o po/clippo.pot prefs.js lib/*.js
+xgettext --from-code=UTF-8 -L JavaScript --keyword=_ --keyword=ngettext:1,2 -o po/clippo.pot prefs.js lib/*.js
 ```
 
 ### Packaging for distribution
@@ -101,17 +103,20 @@ gnome-extensions install --force clippo@daniel.local.shell-extension.zip
 
 | File | Role |
 |---|---|
-| `extension.js` | Lifecycle; wires monitor ↔ store ↔ popup ↔ icon; shortcut. |
-| `lib/clipboardManager.js` | Watches the clipboard (`Meta.Selection`), emits `text-copied`. |
-| `lib/historyStore.js` | History + pinned items in memory and in atomic JSON. |
-| `lib/clipboardPopup.js` | Popup UI: search, list, keyboard, modal grab, dismissal. |
+| `extension.js` | Lifecycle; wires monitor ↔ store ↔ popup ↔ icon ↔ quick toggle; shortcut. |
+| `lib/clipboardManager.js` | Watches the clipboard (`Meta.Selection`), emits `text-copied` / `image-copied`. |
+| `lib/historyStore.js` | History (text + image entries) in memory and in atomic JSON. |
+| `lib/clipboardPopup.js` | Popup UI: search, list, item-detail / edit / QR views, keyboard, modal grab. |
+| `lib/contentType.js` | Pure helpers: detect URL/color/e-mail/code and build safe action URIs. |
+| `lib/quickToggle.js` | Quick Settings toggle for the private mode. |
+| `lib/qrcodegen.js` | Vendored QR encoder (kazuhikoarase/qrcode-generator, MIT). |
 | `lib/indicator.js` | Top-bar icon. |
 | `prefs.js` | Preferences (libadwaita). |
-| `schemas/` | GSettings schema (`max-items`, `toggle-clippo`, `show-indicator`). |
+| `schemas/` | GSettings schema (items, shortcut, indicator, privacy and capture options). |
 | `po/` | Translation catalogs (gettext); compiled to `locale/` at install. |
 
 ## Known limitations / roadmap
 
-- **Text only** in v1 (images come later).
-- Clippo skips copies a **password manager** flags as secret (via the `x-kde-passwordManagerHint` hint), but a password copied from anywhere else is still captured like normal text (mitigation: the `600` file).
-  Future: a full private mode and per-app exclusions.
+- Captures text and images; other content types (e.g. rich files) are not stored.
+- Clippo skips copies a **password manager** flags as secret (via the `x-kde-passwordManagerHint` hint), but a password copied from anywhere else is still captured like normal text. Mitigations: the `600` history file, the private mode, and per-app exclusion.
+- Per-app exclusion is best-effort on Wayland (some clients expose no app id).
