@@ -178,13 +178,13 @@ export default class ClippoExtension extends Extension {
     }
 
     _addKeybinding() {
-        // Known conflict: on GNOME, toggle-message-tray uses ['<Super>v','<Super>m'].
-        // We strip only <Super>v (keeping <Super>m) and restore it on disable.
         this._shellKb = new Gio.Settings({ schema_id: SHELL_KB_SCHEMA });
-        const tray = this._shellKb.get_strv(TRAY_KEY);
-        this._removedTrayBinding = tray.includes(SUPER_V);
-        if (this._removedTrayBinding)
-            this._shellKb.set_strv(TRAY_KEY, tray.filter(a => a !== SUPER_V));
+        this._removedTrayBinding = false;
+        // Only take <Super>v from the message tray while Clippo is actually bound
+        // to it; re-check whenever the user edits the shortcut at runtime.
+        this._reconcileTrayConflict();
+        this._toggleClippoId = this._settings.connect(`changed::${KEYBINDING}`,
+            () => this._reconcileTrayConflict());
 
         Main.wm.addKeybinding(
             KEYBINDING,
@@ -194,8 +194,28 @@ export default class ClippoExtension extends Extension {
             () => this._toggle());
     }
 
+    // Known conflict: GNOME binds toggle-message-tray to ['<Super>v','<Super>m'].
+    // Strip only <Super>v (keeping <Super>m), and only while our shortcut uses it;
+    // hand it back as soon as we stop using it (or on disable).
+    _reconcileTrayConflict() {
+        const weUseSuperV = this._settings.get_strv(KEYBINDING).includes(SUPER_V);
+        const tray = this._shellKb.get_strv(TRAY_KEY);
+        if (weUseSuperV && tray.includes(SUPER_V)) {
+            this._shellKb.set_strv(TRAY_KEY, tray.filter(a => a !== SUPER_V));
+            this._removedTrayBinding = true;
+        } else if (!weUseSuperV && this._removedTrayBinding) {
+            if (!tray.includes(SUPER_V))
+                this._shellKb.set_strv(TRAY_KEY, [...tray, SUPER_V]);
+            this._removedTrayBinding = false;
+        }
+    }
+
     _removeKeybinding() {
         Main.wm.removeKeybinding(KEYBINDING);
+        if (this._toggleClippoId) {
+            this._settings.disconnect(this._toggleClippoId);
+            this._toggleClippoId = 0;
+        }
         if (this._shellKb && this._removedTrayBinding) {
             const tray = this._shellKb.get_strv(TRAY_KEY);
             if (!tray.includes(SUPER_V))

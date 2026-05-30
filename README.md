@@ -8,12 +8,12 @@ pointer with **Super+V**.
 
 ## Features
 
-- Automatically captures everything you copy (text).
+- Automatically captures everything you copy as text (copies a password manager marks as secret are skipped).
 - **Super+V** opens the popup at the pointer.
 - History in descending order (the most recent copy on top).
 - Shows the last **25** copies by default (configurable from 1 to 500).
 - Auto-focused search bar: type to filter, clear it to return to the full list.
-- Keyboard navigation: **↑/↓** to move, **Enter** to select, **Delete** to remove, **Esc** to close.
+- Keyboard navigation: **↑/↓** to move, **Enter** to select, **Delete** to remove (**Shift+Delete** while searching), **Esc** to close.
 - Selecting an item puts it back on the clipboard (paste with **Ctrl+V**) and closes the window.
 - The window closes on selection, on Esc, on click-outside, or when it loses focus.
 - **Pinned items (favorites):** click the star; they stay on top and never fall off the limit.
@@ -113,5 +113,5 @@ gnome-extensions install --force clippo@daniel.local.shell-extension.zip
 ## Known limitations / roadmap
 
 - **Text only** in v1 (images come later).
-- Clippo captures copied **passwords** like any other text. Current mitigation: the `600` file.
-  Future: a private mode, ignoring sensitive content, and per-app exclusions.
+- Clippo skips copies a **password manager** flags as secret (via the `x-kde-passwordManagerHint` hint), but a password copied from anywhere else is still captured like normal text (mitigation: the `600` file).
+  Future: a full private mode and per-app exclusions.
