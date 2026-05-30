@@ -1,9 +1,9 @@
 {
     "uuid": "clippo@daniel.local",
     "name": "Clippo",
-    "description": "Clipboard history manager integrated into GNOME. Captures everything you copy and opens the history with Super+V at the pointer, with search, pinned items and persistence across sessions.",
-    "version": 1,
-    "version-name": "1.0.0",
+    "description": "Clipboard history manager integrated into GNOME. Captures text and images you copy and opens the history with Super+V at the pointer, with search, pinned items, type detection with quick actions, edit, QR codes, a private mode and persistence across sessions.",
+    "version": 2,
+    "version-name": "2.0.0",
     "shell-version": ["48", "49", "50"],
     "settings-schema": "org.gnome.shell.extensions.clippo",
     "gettext-domain": "clippo"

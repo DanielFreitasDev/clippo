@@ -24,6 +24,28 @@ msgstr "Buscar…"
 msgid "No items in history"
 msgstr "Nenhum item no histórico"
 
+#: lib/clipboardPopup.js
+msgid "just now"
+msgstr "agora mesmo"
+
+#: lib/clipboardPopup.js
+msgid "%d minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "há %d minuto"
+msgstr[1] "há %d minutos"
+
+#: lib/clipboardPopup.js
+msgid "%d hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "há %d hora"
+msgstr[1] "há %d horas"
+
+#: lib/clipboardPopup.js
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] "há %d dia"
+msgstr[1] "há %d dias"
+
 #: prefs.js
 msgid "Behavior"
 msgstr "Comportamento"
@@ -75,3 +97,116 @@ msgstr "Novo atalho"
 #: prefs.js
 msgid "Press the new key combination…\n\nBackspace to clear · Esc to cancel"
 msgstr "Pressione a nova combinação de teclas…\n\nBackspace para limpar · Esc para cancelar"
+
+#: prefs.js
+msgid "Privacy"
+msgstr "Privacidade"
+
+#: prefs.js
+msgid "Control what gets captured into the history."
+msgstr "Controle o que é capturado no histórico."
+
+#: lib/quickToggle.js prefs.js
+msgid "Private mode"
+msgstr "Modo privado"
+
+#: prefs.js
+msgid "Pause capturing new items"
+msgstr "Pausar a captura de novos itens"
+
+#: lib/quickToggle.js
+msgid "Pause clipboard history"
+msgstr "Pausar o histórico da área de transferência"
+
+#: prefs.js
+msgid "Trim whitespace"
+msgstr "Aparar espaços em branco"
+
+#: prefs.js
+msgid "Remove leading and trailing spaces and line breaks"
+msgstr "Remover espaços e quebras de linha no início e no fim"
+
+#: prefs.js
+msgid "Capture the primary selection"
+msgstr "Capturar a seleção primária"
+
+#: prefs.js
+msgid "Also store text selected with the mouse (middle-click)"
+msgstr "Também guardar texto selecionado com o mouse (clique do meio)"
+
+#: prefs.js
+msgid "Order by recent use"
+msgstr "Ordenar por uso recente"
+
+#: prefs.js
+msgid "Show recently used items first"
+msgstr "Mostrar primeiro os itens usados recentemente"
+
+#: prefs.js
+msgid "Excluded applications"
+msgstr "Aplicativos excluídos"
+
+#: prefs.js
+msgid ""
+"Copies made while one of these apps is focused are not stored. Use its app "
+"id or window class, e.g. org.keepassxc.KeePassXC."
+msgstr ""
+"Cópias feitas com um destes apps em foco não são guardadas. Use o id do app "
+"ou a classe da janela, ex.: org.keepassxc.KeePassXC."
+
+#: prefs.js
+msgid "Add an app id…"
+msgstr "Adicionar um id de app…"
+
+#: prefs.js
+msgid "Detect content type"
+msgstr "Detectar tipo de conteúdo"
+
+#: prefs.js
+msgid "Recognize links, colors and emails, and offer quick actions"
+msgstr "Reconhecer links, cores e e-mails, e oferecer ações rápidas"
+
+#: lib/clipboardPopup.js
+msgid "Item"
+msgstr "Item"
+
+#: lib/clipboardPopup.js
+msgid "Edit"
+msgstr "Editar"
+
+#: lib/clipboardPopup.js
+msgid "QR code"
+msgstr "Código QR"
+
+#: lib/clipboardPopup.js
+msgid "Open"
+msgstr "Abrir"
+
+#: lib/clipboardPopup.js
+msgid "Remove"
+msgstr "Remover"
+
+#: lib/clipboardPopup.js
+msgid "Save"
+msgstr "Salvar"
+
+#: lib/clipboardPopup.js
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: lib/clipboardPopup.js
+msgid "Image"
+msgstr "Imagem"
+
+#: lib/clipboardPopup.js
+#, javascript-format
+msgid "Image %s"
+msgstr "Imagem %s"
+
+#: prefs.js
+msgid "Capture images"
+msgstr "Capturar imagens"
+
+#: prefs.js
+msgid "Store copied images (PNG) in the history"
+msgstr "Guardar imagens copiadas (PNG) no histórico"

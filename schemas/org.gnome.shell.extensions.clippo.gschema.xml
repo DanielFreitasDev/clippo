@@ -22,5 +22,47 @@
       <description>Shows an icon in the GNOME panel to open the history with the mouse.</description>
     </key>
 
+    <key name="private-mode" type="b">
+      <default>false</default>
+      <summary>Private mode</summary>
+      <description>When on, clipboard capture is paused and nothing new is stored.</description>
+    </key>
+
+    <key name="capture-primary" type="b">
+      <default>false</default>
+      <summary>Capture the primary selection</summary>
+      <description>Also store text selected with the mouse (middle-click), not only Ctrl+C copies.</description>
+    </key>
+
+    <key name="trim-whitespace" type="b">
+      <default>false</default>
+      <summary>Trim whitespace</summary>
+      <description>Remove leading and trailing whitespace from captured text.</description>
+    </key>
+
+    <key name="order-by-recent-use" type="b">
+      <default>false</default>
+      <summary>Order by recent use</summary>
+      <description>Sort the history by last use instead of by when it was copied.</description>
+    </key>
+
+    <key name="excluded-apps" type="as">
+      <default>[]</default>
+      <summary>Excluded applications</summary>
+      <description>Application ids or window classes whose copies are not stored.</description>
+    </key>
+
+    <key name="capture-images" type="b">
+      <default>false</default>
+      <summary>Capture images</summary>
+      <description>Store copied images (PNG) in the history, in addition to text.</description>
+    </key>
+
+    <key name="detect-types" type="b">
+      <default>true</default>
+      <summary>Detect content type</summary>
+      <description>Recognize links, colors and emails to show an icon and offer quick actions.</description>
+    </key>
+
   </schema>
 </schemalist>

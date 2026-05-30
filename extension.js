@@ -16,6 +16,8 @@ import { ClipboardManager } from './lib/clipboardManager.js';
 import { HistoryStore } from './lib/historyStore.js';
 import { ClipboardPopup } from './lib/clipboardPopup.js';
 import { ClippoIndicator } from './lib/indicator.js';
+import { ClippoQuickToggle } from './lib/quickToggle.js';
+import { detectSubtype, actionUri } from './lib/contentType.js';
 
 const KEYBINDING = 'toggle-clippo';
 const SHELL_KB_SCHEMA = 'org.gnome.shell.keybindings';
@@ -31,27 +33,43 @@ export default class ClippoExtension extends Extension {
 
         this._clipboard = new ClipboardManager();
         this._clipboard.connect('text-copied', (_m, text) => {
-            this._store.add(text);
+            this._store.addText(text);
+            this._refreshPopup();
+        });
+        this._clipboard.connect('image-copied', (_m, img) => {
+            this._store.addImage(img.bytes, img.hash, { width: img.width, height: img.height });
             this._refreshPopup();
         });
         this._clipboard.start();
 
         this._popup = new ClipboardPopup();
-        this._popup.connect('item-selected', (_p, text) => {
-            this._clipboard.setClipboard(text);
-            this._store.add(text); // move the chosen item to the top
+        this._popup.connect('item-selected', (_p, id) => {
+            const entry = this._store.getEntry(id);
+            if (!entry)
+                return;
+            if (entry.type === 'text')
+                this._clipboard.setClipboard(entry.text);
+            else if (entry.type === 'image')
+                this._clipboard.setImage(this._store.absoluteImagePath(entry.imagePath), entry.mimetype);
+            this._store.touch(id); // move the chosen item to the top
         });
-        this._popup.connect('item-pin-toggled', (_p, text) => {
-            this._store.togglePin(text);
+        this._popup.connect('item-pin-toggled', (_p, id) => {
+            this._store.togglePin(id);
             this._refreshPopup();
         });
-        this._popup.connect('item-removed', (_p, text) => {
-            this._store.remove(text);
+        this._popup.connect('item-removed', (_p, id) => {
+            this._store.remove(id);
             this._refreshPopup();
         });
         this._popup.connect('clear-requested', () => {
             this._store.clear();
             this._refreshPopup();
+        });
+        this._popup.connect('action-invoked', (_p, id, action) => this._invokeAction(id, action));
+        this._popup.connect('item-edited', (_p, id, text) => {
+            this._store.editText(id, text);
+            this._clipboard.setClipboard(text);
+            this._popup.dismiss();
         });
 
         this._addKeybinding();
@@ -60,16 +78,66 @@ export default class ClippoExtension extends Extension {
         if (this._settings.get_boolean('show-indicator'))
             this._createIndicator();
 
-        this._maxItemsId = this._settings.connect('changed::max-items', () => {
-            this._store.setMaxItems(this._settings.get_int('max-items'));
-            this._refreshPopup();
-        });
-        this._showIndicatorId = this._settings.connect('changed::show-indicator', () => {
-            if (this._settings.get_boolean('show-indicator'))
-                this._createIndicator();
-            else
-                this._destroyIndicator();
-        });
+        this._quickToggle = new ClippoQuickToggle(this._settings);
+        Main.panel.statusArea.quickSettings.addExternalIndicator(this._quickToggle);
+
+        this._applyCaptureSettings();
+        this._settingsIds = [
+            this._settings.connect('changed::max-items', () => {
+                this._store.setMaxItems(this._settings.get_int('max-items'));
+                this._refreshPopup();
+            }),
+            this._settings.connect('changed::show-indicator', () => {
+                if (this._settings.get_boolean('show-indicator'))
+                    this._createIndicator();
+                else
+                    this._destroyIndicator();
+            }),
+            this._settings.connect('changed::order-by-recent-use', () => {
+                this._store.orderByRecentUse = this._settings.get_boolean('order-by-recent-use');
+                this._refreshPopup();
+            }),
+            this._settings.connect('changed::private-mode', () => this._applyCaptureSettings()),
+            this._settings.connect('changed::capture-primary', () => this._applyCaptureSettings()),
+            this._settings.connect('changed::trim-whitespace', () => this._applyCaptureSettings()),
+            this._settings.connect('changed::capture-images', () => this._applyCaptureSettings()),
+            this._settings.connect('changed::excluded-apps', () => this._applyCaptureSettings()),
+            this._settings.connect('changed::detect-types', () => {
+                this._applyCaptureSettings();
+                this._refreshPopup();
+            }),
+        ];
+    }
+
+    // Pushes the capture-related settings into the manager and store. Those
+    // classes never read GSettings themselves; extension.js is the only consumer.
+    _applyCaptureSettings() {
+        this._clipboard.privateMode = this._settings.get_boolean('private-mode');
+        this._clipboard.capturePrimary = this._settings.get_boolean('capture-primary');
+        this._clipboard.trimWhitespace = this._settings.get_boolean('trim-whitespace');
+        this._clipboard.captureImages = this._settings.get_boolean('capture-images');
+        this._clipboard.excludedApps = this._settings.get_strv('excluded-apps');
+        this._store.orderByRecentUse = this._settings.get_boolean('order-by-recent-use');
+        this._popup.detectTypes = this._settings.get_boolean('detect-types');
+        this._popup.dataDir = this._store.dataDir();
+    }
+
+    // Opens a link or mailto for the given item (safe: no command execution).
+    _invokeAction(id, action) {
+        const entry = this._store.getEntry(id);
+        if (!entry || entry.type !== 'text')
+            return;
+        if (action === 'open') {
+            const uri = actionUri(detectSubtype(entry.text), entry.text);
+            if (uri) {
+                try {
+                    Gio.AppInfo.launch_default_for_uri(uri, null);
+                } catch (e) {
+                    logError(e, 'clippo: failed to open uri');
+                }
+            }
+            this._popup.dismiss();
+        }
     }
 
     disable() {
@@ -80,13 +148,15 @@ export default class ClippoExtension extends Extension {
         this._removeKeybinding();
         this._destroyIndicator();
 
-        if (this._settings) {
-            if (this._maxItemsId)
-                this._settings.disconnect(this._maxItemsId);
-            if (this._showIndicatorId)
-                this._settings.disconnect(this._showIndicatorId);
-            this._maxItemsId = 0;
-            this._showIndicatorId = 0;
+        if (this._quickToggle) {
+            this._quickToggle.destroy();
+            this._quickToggle = null;
+        }
+
+        if (this._settings && this._settingsIds) {
+            for (const id of this._settingsIds)
+                this._settings.disconnect(id);
+            this._settingsIds = null;
         }
 
         if (this._clipboard) {

@@ -8,7 +8,7 @@ import Gtk from 'gi://Gtk';
 import Gdk from 'gi://Gdk';
 import Gio from 'gi://Gio';
 
-import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/shell/extensions/prefs.js';
+import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 const MODIFIER_KEYVALS = [
     Gdk.KEY_Shift_L, Gdk.KEY_Shift_R,
@@ -49,6 +49,87 @@ export default class ClippoPreferences extends ExtensionPreferences {
         });
         behavior.add(indicatorRow);
         settings.bind('show-indicator', indicatorRow, 'active', Gio.SettingsBindFlags.DEFAULT);
+
+        const detectRow = new Adw.SwitchRow({
+            title: _('Detect content type'),
+            subtitle: _('Recognize links, colors and emails, and offer quick actions'),
+        });
+        behavior.add(detectRow);
+        settings.bind('detect-types', detectRow, 'active', Gio.SettingsBindFlags.DEFAULT);
+
+        // --- Privacy ---
+        const privacy = new Adw.PreferencesGroup({
+            title: _('Privacy'),
+            description: _('Control what gets captured into the history.'),
+        });
+        page.add(privacy);
+
+        const switches = [
+            ['private-mode', _('Private mode'), _('Pause capturing new items')],
+            ['capture-images', _('Capture images'), _('Store copied images (PNG) in the history')],
+            ['trim-whitespace', _('Trim whitespace'), _('Remove leading and trailing spaces and line breaks')],
+            ['capture-primary', _('Capture the primary selection'), _('Also store text selected with the mouse (middle-click)')],
+            ['order-by-recent-use', _('Order by recent use'), _('Show recently used items first')],
+        ];
+        for (const [key, title, subtitle] of switches) {
+            const row = new Adw.SwitchRow({ title, subtitle });
+            privacy.add(row);
+            settings.bind(key, row, 'active', Gio.SettingsBindFlags.DEFAULT);
+        }
+
+        // --- Excluded apps ---
+        const excluded = new Adw.PreferencesGroup({
+            title: _('Excluded applications'),
+            description: _('Copies made while one of these apps is focused are not stored. Use its app id or window class, e.g. org.keepassxc.KeePassXC.'),
+        });
+        page.add(excluded);
+
+        const addRow = new Adw.EntryRow({ title: _('Add an app id…') });
+        const addButton = new Gtk.Button({
+            icon_name: 'list-add-symbolic',
+            valign: Gtk.Align.CENTER,
+            css_classes: ['flat'],
+        });
+        addRow.add_suffix(addButton);
+        excluded.add(addRow);
+
+        let excludedRows = [];
+        const refreshExcluded = () => {
+            for (const row of excludedRows)
+                excluded.remove(row);
+            excludedRows = [];
+            for (const app of settings.get_strv('excluded-apps')) {
+                const row = new Adw.ActionRow({ title: app });
+                const del = new Gtk.Button({
+                    icon_name: 'user-trash-symbolic',
+                    valign: Gtk.Align.CENTER,
+                    css_classes: ['flat'],
+                });
+                del.connect('clicked', () => {
+                    settings.set_strv('excluded-apps',
+                        settings.get_strv('excluded-apps').filter(a => a !== app));
+                });
+                row.add_suffix(del);
+                excluded.add(row);
+                excludedRows.push(row);
+            }
+        };
+        const addApp = () => {
+            const text = addRow.get_text().trim();
+            if (!text)
+                return;
+            const list = settings.get_strv('excluded-apps');
+            if (!list.includes(text)) {
+                list.push(text);
+                settings.set_strv('excluded-apps', list);
+            }
+            addRow.set_text('');
+        };
+        addButton.connect('clicked', addApp);
+        addRow.connect('entry-activated', addApp);
+        const excludedChangedId = settings.connect('changed::excluded-apps', refreshExcluded);
+        window.connect('destroy', () => settings.disconnect(excludedChangedId));
+        refreshExcluded();
 
         // --- Shortcut ---
         const shortcutGroup = new Adw.PreferencesGroup({
