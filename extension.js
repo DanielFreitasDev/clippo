@@ -72,6 +72,13 @@ export default class ClippoExtension extends Extension {
             this._popup.dismiss();
         });
 
+        // Follow the system light/dark color scheme (a separate schema from ours;
+        // the lib modules stay GSettings-free, so extension.js pushes it in).
+        this._interfaceSettings = new Gio.Settings({ schema_id: 'org.gnome.desktop.interface' });
+        this._applyTheme();
+        this._interfaceThemeId = this._interfaceSettings.connect('changed::color-scheme',
+            () => this._applyTheme());
+
         this._addKeybinding();
 
         this._indicator = null;
@@ -122,6 +129,12 @@ export default class ClippoExtension extends Extension {
         this._popup.dataDir = this._store.dataDir();
     }
 
+    // Pushes the current light/dark color scheme into the popup.
+    _applyTheme() {
+        const dark = this._interfaceSettings.get_string('color-scheme') === 'prefer-dark';
+        this._popup.darkTheme = dark;
+    }
+
     // Opens a link or mailto for the given item (safe: no command execution).
     _invokeAction(id, action) {
         const entry = this._store.getEntry(id);
@@ -158,6 +171,12 @@ export default class ClippoExtension extends Extension {
                 this._settings.disconnect(id);
             this._settingsIds = null;
         }
+
+        if (this._interfaceSettings && this._interfaceThemeId) {
+            this._interfaceSettings.disconnect(this._interfaceThemeId);
+            this._interfaceThemeId = 0;
+        }
+        this._interfaceSettings = null;
 
         if (this._clipboard) {
             this._clipboard.stop();

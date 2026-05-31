@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the clippo package.
+# This file is distributed under the same license as the Clippo package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: clippo\n"
+"Project-Id-Version: Clippo\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-30 15:59-0300\n"
+"POT-Creation-Date: 2026-05-30 20:55-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -130,85 +130,117 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: prefs.js:167
+#: prefs.js:165
 msgid "New shortcut"
 msgstr ""
 
-#: prefs.js:173
+#: prefs.js:170
 msgid ""
 "Press the new key combination…\n"
 "\n"
 "Backspace to clear · Esc to cancel"
 msgstr ""
 
-#: lib/clipboardPopup.js:80
+#: lib/clipboardPopup.js:98
 msgid "Search…"
 msgstr ""
 
-#: lib/clipboardPopup.js:153
+#: lib/clipboardPopup.js:113
+msgid "Clear history"
+msgstr ""
+
+#: lib/clipboardPopup.js:172
 msgid "No items in history"
 msgstr ""
 
-#: lib/clipboardPopup.js:172 lib/clipboardPopup.js:273
+#: lib/clipboardPopup.js:191 lib/clipboardPopup.js:295
 msgid "Image"
 msgstr ""
 
-#: lib/clipboardPopup.js:273
+#: lib/clipboardPopup.js:221
+msgid "Send email"
+msgstr ""
+
+#: lib/clipboardPopup.js:221
+msgid "Open link"
+msgstr ""
+
+#: lib/clipboardPopup.js:230
+msgid "More actions"
+msgstr ""
+
+#: lib/clipboardPopup.js:241
+msgid "Unpin"
+msgstr ""
+
+#: lib/clipboardPopup.js:241
+msgid "Pin"
+msgstr ""
+
+#: lib/clipboardPopup.js:295
 #, javascript-format
 msgid "Image %s"
 msgstr ""
 
-#: lib/clipboardPopup.js:304
+#: lib/clipboardPopup.js:326
 msgid "just now"
 msgstr ""
 
-#: lib/clipboardPopup.js:307
+#: lib/clipboardPopup.js:329
 #, javascript-format
 msgid "%d minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/clipboardPopup.js:310
+#: lib/clipboardPopup.js:332
 #, javascript-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/clipboardPopup.js:313
+#: lib/clipboardPopup.js:335
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/clipboardPopup.js:363
+#: lib/clipboardPopup.js:351
+msgid "Back"
+msgstr ""
+
+#: lib/clipboardPopup.js:386
 msgid "Item"
 msgstr ""
 
-#: lib/clipboardPopup.js:393 lib/clipboardPopup.js:415
+#: lib/clipboardPopup.js:416 lib/clipboardPopup.js:438
 msgid "Edit"
 msgstr ""
 
-#: lib/clipboardPopup.js:395 lib/clipboardPopup.js:447
+#: lib/clipboardPopup.js:418 lib/clipboardPopup.js:470
 msgid "QR code"
 msgstr ""
 
-#: lib/clipboardPopup.js:398
+#: lib/clipboardPopup.js:421
 msgid "Open"
 msgstr ""
 
-#: lib/clipboardPopup.js:400
+#: lib/clipboardPopup.js:423
 msgid "Remove"
 msgstr ""
 
-#: lib/clipboardPopup.js:426
+#: lib/clipboardPopup.js:449
 msgid "Save"
 msgstr ""
 
-#: lib/clipboardPopup.js:432
+#: lib/clipboardPopup.js:455
 msgid "Cancel"
+msgstr ""
+
+#: lib/indicator.js:18
+msgid "Clipboard history"
 msgstr ""
 
 #: lib/quickToggle.js:21

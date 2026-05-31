@@ -1,12 +1,27 @@
-/* Clippo — popup styling */
+/* Clippo — popup styling.
+ *
+ * Geometry (sizes, spacing, radii) is shared; colors adapt to the system
+ * light/dark color scheme via the .clippo-dark / .clippo-light class set from
+ * org.gnome.desktop.interface in extension.js. The selected row follows the
+ * system accent color, with a neutral fallback for shells without accent
+ * support. St.Entry surfaces (search/edit) keep the theme's own styling. */
 
 .clippo-popup {
-    background-color: rgba(36, 36, 38, 0.98);
-    border: 1px solid rgba(255, 255, 255, 0.10);
     border-radius: 14px;
     padding: 8px;
     width: 440px;
+}
+
+.clippo-popup.clippo-dark {
+    background-color: rgba(36, 36, 38, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.10);
     color: #ffffff;
+}
+
+.clippo-popup.clippo-light {
+    background-color: rgba(250, 250, 251, 0.98);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    color: #1e1e1e;
 }
 
 .clippo-header {
@@ -20,17 +35,35 @@
 
 .clippo-search-icon {
     icon-size: 16px;
+}
+
+.clippo-dark .clippo-search-icon {
     color: rgba(255, 255, 255, 0.6);
+}
+
+.clippo-light .clippo-search-icon {
+    color: rgba(0, 0, 0, 0.55);
 }
 
 .clippo-icon-button {
     border-radius: 9px;
     padding: 6px;
+}
+
+.clippo-dark .clippo-icon-button {
     color: rgba(255, 255, 255, 0.85);
 }
 
-.clippo-icon-button:hover {
+.clippo-light .clippo-icon-button {
+    color: rgba(0, 0, 0, 0.75);
+}
+
+.clippo-dark .clippo-icon-button:hover {
     background-color: rgba(255, 255, 255, 0.12);
+}
+
+.clippo-light .clippo-icon-button:hover {
+    background-color: rgba(0, 0, 0, 0.08);
 }
 
 .clippo-scroll {
@@ -46,8 +79,14 @@
     spacing: 2px;
 }
 
+/* Selected (keyboard-highlighted) row: follow the accent color when the shell
+ * supports it; the neutral rule above is the fallback if it doesn't. */
 .clippo-row-selected {
-    background-color: rgba(120, 170, 255, 0.28);
+    background-color: rgba(127, 127, 127, 0.22);
+}
+
+.clippo-row-selected {
+    background-color: st-transparentize(-st-accent-color, 0.55);
 }
 
 .clippo-row-pinned .clippo-item-button {
@@ -57,35 +96,74 @@
 .clippo-item-button {
     padding: 9px 10px;
     border-radius: 9px;
+}
+
+.clippo-dark .clippo-item-button {
     color: #ffffff;
 }
 
-.clippo-item-button:hover {
+.clippo-light .clippo-item-button {
+    color: #1e1e1e;
+}
+
+.clippo-dark .clippo-item-button:hover {
     background-color: rgba(255, 255, 255, 0.10);
+}
+
+.clippo-light .clippo-item-button:hover {
+    background-color: rgba(0, 0, 0, 0.06);
 }
 
 .clippo-time {
     font-size: 0.78em;
-    color: rgba(255, 255, 255, 0.40);
     padding: 0 4px;
 }
 
+.clippo-dark .clippo-time {
+    color: rgba(255, 255, 255, 0.40);
+}
+
+.clippo-light .clippo-time {
+    color: rgba(0, 0, 0, 0.45);
+}
+
 .clippo-type-icon {
-    color: rgba(255, 255, 255, 0.55);
     margin: 0 2px;
+}
+
+.clippo-dark .clippo-type-icon {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.clippo-light .clippo-type-icon {
+    color: rgba(0, 0, 0, 0.50);
 }
 
 .clippo-swatch {
     width: 18px;
     height: 18px;
     border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
     margin: 0 2px;
+}
+
+.clippo-dark .clippo-swatch {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.clippo-light .clippo-swatch {
+    border: 1px solid rgba(0, 0, 0, 0.25);
 }
 
 .clippo-empty {
     padding: 18px;
+}
+
+.clippo-dark .clippo-empty {
     color: rgba(255, 255, 255, 0.55);
+}
+
+.clippo-light .clippo-empty {
+    color: rgba(0, 0, 0, 0.50);
 }
 
 .clippo-detail {
@@ -117,12 +195,24 @@
 .clippo-detail-button {
     padding: 8px 14px;
     border-radius: 9px;
+}
+
+.clippo-dark .clippo-detail-button {
     background-color: rgba(255, 255, 255, 0.10);
     color: #ffffff;
 }
 
-.clippo-detail-button:hover {
+.clippo-light .clippo-detail-button {
+    background-color: rgba(0, 0, 0, 0.08);
+    color: #1e1e1e;
+}
+
+.clippo-dark .clippo-detail-button:hover {
     background-color: rgba(255, 255, 255, 0.18);
+}
+
+.clippo-light .clippo-detail-button:hover {
+    background-color: rgba(0, 0, 0, 0.14);
 }
 
 .clippo-edit-entry {

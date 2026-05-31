@@ -161,20 +161,19 @@ export default class ClippoPreferences extends ExtensionPreferences {
     }
 
     _captureShortcut(parent, settings) {
-        const dialog = new Gtk.Window({
-            modal: true,
-            transient_for: parent,
+        const dialog = new Adw.Dialog({
             title: _('New shortcut'),
-            default_width: 380,
-            default_height: 140,
-            resizable: false,
+            content_width: 380,
+            content_height: 140,
         });
         dialog.set_child(new Gtk.Label({
             label: _('Press the new key combination…\n\nBackspace to clear · Esc to cancel'),
             justify: Gtk.Justification.CENTER,
         }));
 
+        // Capture phase: intercept the key combination before any default handling.
         const controller = new Gtk.EventControllerKey();
+        controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE);
         dialog.add_controller(controller);
         controller.connect('key-pressed', (_c, keyval, _keycode, state) => {
             const mask = state & Gtk.accelerator_get_default_mod_mask();
@@ -201,6 +200,6 @@ export default class ClippoPreferences extends ExtensionPreferences {
             return Gdk.EVENT_STOP;
         });
 
-        dialog.present();
+        dialog.present(parent);
     }
 }
