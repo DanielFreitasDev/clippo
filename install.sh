@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-UUID="clippo@daniel.local"
+UUID="clippo@danielfreitasdev.github.io"
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="$HOME/.local/share/gnome-shell/extensions/$UUID"
 
@@ -38,7 +38,8 @@ echo "Next steps:"
 echo "  1. Log out and back in (on Wayland you can't restart gnome-shell)."
 echo "  2. Enable the extension:"
 echo "       gnome-extensions enable $UUID"
-echo "  3. Press Super+V to open the history."
+echo "  3. Set the open-history shortcut in the preferences (Super+V is a good"
+echo "     choice) — or click the top-bar icon."
 echo
 echo "Preferences:  gnome-extensions prefs $UUID"
 echo "Logs:         journalctl -f -o cat /usr/bin/gnome-shell"

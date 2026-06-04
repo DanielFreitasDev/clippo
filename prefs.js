@@ -141,7 +141,7 @@ export default class ClippoPreferences extends ExtensionPreferences {
         // --- Shortcuts ---
         const shortcutGroup = new Adw.PreferencesGroup({
             title: _('Shortcuts'),
-            description: _('Click a row to set its shortcut; Backspace clears; Esc cancels. While Clippo uses Super+V it takes it from the message tray (Super+M keeps working). The cycling shortcuts are unset by default.'),
+            description: _('Click a row to set its shortcut; Backspace clears; Esc cancels. All shortcuts are unset by default; if you choose Super+V, Clippo takes it from the message tray (Super+M keeps working).'),
         });
         page.add(shortcutGroup);
 

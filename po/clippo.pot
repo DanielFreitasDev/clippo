@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-31 19:33-0300\n"
+"POT-Creation-Date: 2026-06-04 14:58-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -122,9 +122,9 @@ msgstr ""
 
 #: prefs.js:144
 msgid ""
-"Click a row to set its shortcut; Backspace clears; Esc cancels. While Clippo "
-"uses Super+V it takes it from the message tray (Super+M keeps working). The "
-"cycling shortcuts are unset by default."
+"Click a row to set its shortcut; Backspace clears; Esc cancels. All "
+"shortcuts are unset by default; if you choose Super+V, Clippo takes it from "
+"the message tray (Super+M keeps working)."
 msgstr ""
 
 #: prefs.js:149

@@ -1,9 +1,9 @@
 // extension.js
 //
 // Orchestrates Clippo's lifecycle: wires the clipboard monitor to the history
-// store and the popup, registers the Super+V shortcut (handling the conflict
-// with the message tray) and creates the panel icon. As a Shell extension, it
-// starts automatically at login.
+// store and the popup, registers the open-history shortcut (handling the
+// message-tray conflict when the user picks Super+V) and creates the panel
+// icon. As a Shell extension, it starts automatically at login.
 
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';

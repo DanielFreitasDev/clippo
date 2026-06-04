@@ -4,12 +4,12 @@
 
 Gerenciador de histórico da área de transferência para o **GNOME Shell** (Wayland),
 feito como extensão nativa do GNOME. Captura o texto **e as imagens** que você copia
-e abre o histórico com **Super+V** na posição do mouse.
+e abre o histórico na posição do mouse com um atalho à sua escolha (ex.: **Super+V**).
 
 ## Recursos
 
 - Captura texto e, opcionalmente, **imagens** que você copia.
-- **Super+V** abre o popup na posição do cursor.
+- Um atalho à sua escolha (ex.: **Super+V**) abre o popup na posição do cursor — defina-o nas preferências.
 - Histórico em ordem decrescente (a mais recente no topo), com **há quanto tempo** cada item foi copiado.
 - Mostra as **25** últimas cópias por padrão (configurável de 1 a 500).
 - Barra de busca com foco automático: digite para filtrar, apague para voltar à lista.
@@ -44,18 +44,20 @@ Depois:
 1. **Faça logout e login** (no Wayland o gnome-shell não pode ser reiniciado em sessão).
 2. Habilite:
    ```bash
-   gnome-extensions enable clippo@daniel.local
+   gnome-extensions enable clippo@danielfreitasdev.github.io
    ```
-3. Pressione **Super+V**.
+3. Defina o atalho **Abrir histórico** nas preferências (Super+V é uma boa escolha).
 
-> O Clippo assume o atalho **Super+V** (normalmente usado pela *bandeja de mensagens*)
-> enquanto está ativo; o **Super+M** continua abrindo a bandeja. Ao desabilitar a
-> extensão, o Super+V é devolvido à bandeja.
+> Os atalhos vêm sem definição de fábrica — regra da extensions.gnome.org para
+> gerenciadores de clipboard. Se você escolher o **Super+V**, o Clippo o assume
+> (normalmente usado pela *bandeja de mensagens*); o **Super+M** continua abrindo
+> a bandeja. Sem o atalho — ou ao desabilitar a extensão — o Super+V é devolvido
+> à bandeja.
 
 ## Preferências
 
 ```bash
-gnome-extensions prefs clippo@daniel.local
+gnome-extensions prefs clippo@danielfreitasdev.github.io
 ```
 
 Permite ajustar o número de itens; ativar o ícone da barra, a detecção de tipo, **manter o histórico entre sessões**, a captura de imagens, o modo privado, a remoção de espaços e a captura da seleção primária; gerenciar a lista de apps excluídos; e definir os atalhos — abrir histórico, mais as teclas opcionais de **colar próximo / anterior**.
@@ -68,7 +70,7 @@ do projeto são o próprio código (via symlink do `install.sh`).
 - Aplicar mudanças no código: **logout/login** (limitação do Wayland).
 - Re-rodar `enable()`/`disable()` sem novo código:
   ```bash
-  gnome-extensions disable clippo@daniel.local && gnome-extensions enable clippo@daniel.local
+  gnome-extensions disable clippo@danielfreitasdev.github.io && gnome-extensions enable clippo@danielfreitasdev.github.io
   ```
 - Logs do shell:
   ```bash
@@ -96,8 +98,8 @@ xgettext --from-code=UTF-8 -L JavaScript --keyword=_ --keyword=ngettext:1,2 -o p
 ### Empacotar para distribuição
 
 ```bash
-gnome-extensions pack --extra-source=lib --extra-source=stylesheet.css .
-gnome-extensions install --force clippo@daniel.local.shell-extension.zip
+gnome-extensions pack --force --podir=po --extra-source=lib --extra-source=LICENSE .
+gnome-extensions install --force clippo@danielfreitasdev.github.io.shell-extension.zip
 ```
 
 ## Estrutura
@@ -122,3 +124,8 @@ gnome-extensions install --force clippo@daniel.local.shell-extension.zip
 - Captura texto e imagens; outros tipos de conteúdo (ex.: arquivos ricos) não são guardados.
 - O Clippo ignora cópias que um **gerenciador de senhas** marca como secretas (pelo hint `x-kde-passwordManagerHint`), mas uma senha copiada de outro lugar ainda é capturada como texto comum. Mitigações: o arquivo `600`, o modo privado e a exclusão por app.
 - A exclusão por app é "melhor esforço" no Wayland (alguns apps não expõem id).
+
+## Licença
+
+GPL-2.0-or-later (veja `LICENSE`). O codificador QR vendorizado
+(`lib/qrcodegen.js`) é MIT, que é compatível.

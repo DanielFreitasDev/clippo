@@ -289,8 +289,8 @@ msgid "Shortcuts"
 msgstr "Atalhos"
 
 #: prefs.js
-msgid "Click a row to set its shortcut; Backspace clears; Esc cancels. While Clippo uses Super+V it takes it from the message tray (Super+M keeps working). The cycling shortcuts are unset by default."
-msgstr "Clique numa linha para definir o atalho; Backspace limpa; Esc cancela. Enquanto o Clippo usa o Super+V, ele o assume da bandeja de mensagens (o Super+M continua funcionando). Os atalhos de rodízio vêm sem definição."
+msgid "Click a row to set its shortcut; Backspace clears; Esc cancels. All shortcuts are unset by default; if you choose Super+V, Clippo takes it from the message tray (Super+M keeps working)."
+msgstr "Clique numa linha para definir o atalho; Backspace limpa; Esc cancela. Todos os atalhos vêm sem definição; se você escolher o Super+V, o Clippo o assume da bandeja de mensagens (o Super+M continua funcionando)."
 
 #: prefs.js
 msgid "Open the history popup"

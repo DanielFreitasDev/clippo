@@ -11,7 +11,10 @@
     </key>
 
     <key name="toggle-clippo" type="as">
-      <default><![CDATA[['<Super>v']]]></default>
+      <!-- Unset by default: extensions.gnome.org forbids default shortcuts
+           that interact with clipboard data. Users assign one in preferences
+           (Super+V is the suggestion; _reconcileTrayConflict handles it). -->
+      <default>[]</default>
       <summary>Open the history</summary>
       <description>Keyboard shortcut that opens the Clippo popup.</description>
     </key>

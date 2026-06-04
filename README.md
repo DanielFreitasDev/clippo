@@ -4,12 +4,12 @@
 
 Clipboard history manager for the **GNOME Shell** (Wayland), built as a native
 GNOME extension. It captures the text **and images** you copy and opens your
-history at the pointer with **Super+V**.
+history at the pointer with a shortcut of your choice (e.g. **Super+V**).
 
 ## Features
 
 - Captures text and, optionally, **images** you copy.
-- **Super+V** opens the popup at the pointer.
+- A shortcut of your choice (e.g. **Super+V**) opens the popup at the pointer — set it in the preferences.
 - History in descending order (most recent on top), each item showing **how long ago** it was copied.
 - Shows the last **25** copies by default (configurable from 1 to 500).
 - Auto-focused search bar: type to filter, clear it to return to the full list.
@@ -44,18 +44,19 @@ Then:
 1. **Log out and back in** (on Wayland gnome-shell can't be restarted in-session).
 2. Enable it:
    ```bash
-   gnome-extensions enable clippo@daniel.local
+   gnome-extensions enable clippo@danielfreitasdev.github.io
    ```
-3. Press **Super+V**.
+3. Set the **open history** shortcut in the preferences (Super+V is a good choice).
 
-> While it's active, Clippo takes over the **Super+V** shortcut (normally used by
-> the *message tray*); **Super+M** still opens the tray. When you disable the
-> extension, Super+V is handed back to the tray.
+> Shortcuts ship unset — an extensions.gnome.org rule for clipboard managers. If
+> you pick **Super+V**, Clippo takes it over (normally used by the *message
+> tray*); **Super+M** still opens the tray. When the shortcut is unbound or the
+> extension is disabled, Super+V is handed back to the tray.
 
 ## Preferences
 
 ```bash
-gnome-extensions prefs clippo@daniel.local
+gnome-extensions prefs clippo@danielfreitasdev.github.io
 ```
 
 Lets you adjust the number of items; toggle the top-bar icon, content-type detection, **keep-history-across-sessions**, image capture, private mode, whitespace trimming and primary-selection capture; manage the excluded-apps list; and set the shortcuts — open history, plus the optional **paste next / previous** cycling keys.
@@ -68,7 +69,7 @@ the project files are the code itself (symlinked by `install.sh`).
 - To apply code changes: **log out / back in** (a Wayland limitation).
 - To re-run `enable()`/`disable()` without new code:
   ```bash
-  gnome-extensions disable clippo@daniel.local && gnome-extensions enable clippo@daniel.local
+  gnome-extensions disable clippo@danielfreitasdev.github.io && gnome-extensions enable clippo@danielfreitasdev.github.io
   ```
 - Shell logs:
   ```bash
@@ -96,8 +97,8 @@ xgettext --from-code=UTF-8 -L JavaScript --keyword=_ --keyword=ngettext:1,2 -o p
 ### Packaging for distribution
 
 ```bash
-gnome-extensions pack --extra-source=lib --extra-source=stylesheet.css --podir=po .
-gnome-extensions install --force clippo@daniel.local.shell-extension.zip
+gnome-extensions pack --force --podir=po --extra-source=lib --extra-source=LICENSE .
+gnome-extensions install --force clippo@danielfreitasdev.github.io.shell-extension.zip
 ```
 
 ## Structure
@@ -122,3 +123,8 @@ gnome-extensions install --force clippo@daniel.local.shell-extension.zip
 - Captures text and images; other content types (e.g. rich files) are not stored.
 - Clippo skips copies a **password manager** flags as secret (via the `x-kde-passwordManagerHint` hint), but a password copied from anywhere else is still captured like normal text. Mitigations: the `600` history file, the private mode, and per-app exclusion.
 - Per-app exclusion is best-effort on Wayland (some clients expose no app id).
+
+## License
+
+GPL-2.0-or-later (see `LICENSE`). The vendored QR encoder (`lib/qrcodegen.js`)
+is MIT, which is compatible.
