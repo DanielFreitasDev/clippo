@@ -15,13 +15,14 @@ e abre o histórico com **Super+V** na posição do mouse.
 - Barra de busca com foco automático: digite para filtrar, apague para voltar à lista.
 - Navegação por teclado: **↑/↓** move, **→** abre os detalhes, **Enter** seleciona, **Delete** remove (**Shift+Delete** durante a busca), **Esc** fecha.
 - Selecionar um item devolve o conteúdo ao clipboard (cole com **Ctrl+V**) e fecha a janela.
-- **Detecção de tipo:** links, cores, e-mails e código ganham ícone/amostra próprios, com ação rápida de **abrir** para links e e-mails.
+- **Detecção de tipo:** links, cores, e-mails e código ganham ícone/amostra próprios, com ação rápida de **abrir** — e um seletor **Abrir com…** para escolher o aplicativo — para links e e-mails.
 - **Editar antes de colar** e gerar **QR code** de qualquer item de texto (útil para enviar um link ao celular).
-- **Itens fixados (favoritos):** clique na estrela; ficam no topo e não somem pelo limite.
+- **Itens fixados (favoritos):** clique na estrela; ficam no topo e não somem pelo limite. Um botão no cabeçalho filtra a lista para **só os fixados**, e remover um item fixado pede confirmação.
+- **Colar próximo / anterior:** atalhos opcionais percorrem o histórico na área de transferência com uma prévia na tela, sem abrir o popup. **Sem definição por padrão** — defina-os nas preferências.
 - **Privacidade:** um **modo privado** para pausar a captura (também nas Configurações rápidas); cópias marcadas como secretas por um gerenciador de senhas são ignoradas; **exclusão por app** opcional; remoção de espaços em branco; e captura opcional da seleção primária (clique do meio).
 - **Limpar histórico:** botão da lixeira (mantém os fixados).
 - **Ícone na barra superior** (opcional) para abrir com o mouse.
-- Persiste entre logout/reboot em `~/.local/share/clippo/` (permissões `600`; imagens como PNGs separados).
+- Persiste entre logout/reboot em `~/.local/share/clippo/` (permissões `600`; imagens como PNGs separados) — ou desligue **“Manter histórico entre sessões”** para mantê-lo só na memória e apagá-lo ao sair (nada gravado em disco).
 - Inicia junto com a sessão (extensões do Shell rodam no login, sem autostart).
 - **UI localizada:** acompanha o idioma do sistema — inglês e português do Brasil inclusos, com inglês como padrão.
 
@@ -57,7 +58,7 @@ Depois:
 gnome-extensions prefs clippo@daniel.local
 ```
 
-Permite ajustar o número de itens; ativar o ícone da barra, a detecção de tipo, a captura de imagens, o modo privado, a remoção de espaços e a captura da seleção primária; gerenciar a lista de apps excluídos; e trocar o atalho.
+Permite ajustar o número de itens; ativar o ícone da barra, a detecção de tipo, **manter o histórico entre sessões**, a captura de imagens, o modo privado, a remoção de espaços e a captura da seleção primária; gerenciar a lista de apps excluídos; e definir os atalhos — abrir histórico, mais as teclas opcionais de **colar próximo / anterior**.
 
 ## Desenvolvimento
 
@@ -106,9 +107,10 @@ gnome-extensions install --force clippo@daniel.local.shell-extension.zip
 | `extension.js` | Ciclo de vida; conecta monitor ↔ store ↔ popup ↔ ícone ↔ quick toggle; atalho. |
 | `lib/clipboardManager.js` | Monitora o clipboard (`Meta.Selection`), emite `text-copied` / `image-copied`. |
 | `lib/historyStore.js` | Histórico (itens de texto + imagem) em memória e em JSON atômico. |
-| `lib/clipboardPopup.js` | UI do popup: busca, lista, telas de detalhe / edição / QR, teclado, grab modal. |
-| `lib/contentType.js` | Helpers puros: detecta URL/cor/e-mail/código e monta URIs de ação seguras. |
+| `lib/clipboardPopup.js` | UI do popup: busca, lista (filtro só-fixados), telas de detalhe / edição / QR / abrir-com / confirmar-remoção, teclado, grab modal. |
+| `lib/contentType.js` | Helpers puros: detecta URL/cor/e-mail/código, monta URIs de ação seguras e o tipo de conteúdo do “abrir com”. |
 | `lib/quickToggle.js` | Botão de Configurações rápidas para o modo privado. |
+| `lib/cycleOsd.js` | Prévia na tela exibida ao percorrer o histórico (colar próximo/anterior). |
 | `lib/qrcodegen.js` | Codificador QR vendorizado (kazuhikoarase/qrcode-generator, MIT). |
 | `lib/indicator.js` | Ícone na barra superior. |
 | `prefs.js` | Preferências (libadwaita). |

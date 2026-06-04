@@ -6,6 +6,7 @@
 // starts automatically at login.
 
 import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 
@@ -17,9 +18,13 @@ import { HistoryStore } from './lib/historyStore.js';
 import { ClipboardPopup } from './lib/clipboardPopup.js';
 import { ClippoIndicator } from './lib/indicator.js';
 import { ClippoQuickToggle } from './lib/quickToggle.js';
+import { CycleOsd } from './lib/cycleOsd.js';
 import { detectSubtype, actionUri } from './lib/contentType.js';
 
 const KEYBINDING = 'toggle-clippo';
+const CYCLE_NEXT = 'cycle-next';
+const CYCLE_PREV = 'cycle-previous';
+const CYCLE_RESET_MS = 1500;
 const SHELL_KB_SCHEMA = 'org.gnome.shell.keybindings';
 const TRAY_KEY = 'toggle-message-tray';
 const SUPER_V = '<Super>v';
@@ -29,14 +34,21 @@ export default class ClippoExtension extends Extension {
         this._settings = this.getSettings();
 
         this._store = new HistoryStore(this._settings.get_int('max-items'));
+        this._store.persist = this._settings.get_boolean('persist-history');
         this._store.load();
+
+        // History-cycling state (paste next/previous via shortcut).
+        this._cycleIndex = -1;
+        this._cycleResetId = 0;
 
         this._clipboard = new ClipboardManager();
         this._clipboard.connect('text-copied', (_m, text) => {
+            this._resetCycle();
             this._store.addText(text);
             this._refreshPopup();
         });
         this._clipboard.connect('image-copied', (_m, img) => {
+            this._resetCycle();
             this._store.addImage(img.bytes, img.hash, { width: img.width, height: img.height });
             this._refreshPopup();
         });
@@ -66,11 +78,14 @@ export default class ClippoExtension extends Extension {
             this._refreshPopup();
         });
         this._popup.connect('action-invoked', (_p, id, action) => this._invokeAction(id, action));
+        this._popup.connect('open-with-invoked', (_p, id, appId) => this._openWith(id, appId));
         this._popup.connect('item-edited', (_p, id, text) => {
             this._store.editText(id, text);
             this._clipboard.setClipboard(text);
             this._popup.dismiss();
         });
+
+        this._cycleOsd = new CycleOsd();
 
         // Follow the system light/dark color scheme (a separate schema from ours;
         // the lib modules stay GSettings-free, so extension.js pushes it in).
@@ -80,6 +95,7 @@ export default class ClippoExtension extends Extension {
             () => this._applyTheme());
 
         this._addKeybinding();
+        this._addCycleKeybindings();
 
         this._indicator = null;
         if (this._settings.get_boolean('show-indicator'))
@@ -113,6 +129,9 @@ export default class ClippoExtension extends Extension {
                 this._applyCaptureSettings();
                 this._refreshPopup();
             }),
+            this._settings.connect('changed::persist-history', () => {
+                this._store.setPersist(this._settings.get_boolean('persist-history'));
+            }),
         ];
     }
 
@@ -133,6 +152,8 @@ export default class ClippoExtension extends Extension {
     _applyTheme() {
         const dark = this._interfaceSettings.get_string('color-scheme') === 'prefer-dark';
         this._popup.darkTheme = dark;
+        if (this._cycleOsd)
+            this._cycleOsd.darkTheme = dark;
     }
 
     // Opens a link or mailto for the given item (safe: no command execution).
@@ -153,12 +174,33 @@ export default class ClippoExtension extends Extension {
         }
     }
 
+    // Launches the app chosen in the "Open with…" list for an item's link/email
+    // (safe: Gio.AppInfo, never a shell command). The popup dismissed itself
+    // before emitting.
+    _openWith(id, appId) {
+        const entry = this._store.getEntry(id);
+        if (!entry || entry.type !== 'text')
+            return;
+        const uri = actionUri(detectSubtype(entry.text), entry.text);
+        if (!uri)
+            return;
+        try {
+            const app = Gio.DesktopAppInfo.new(appId);
+            if (app)
+                app.launch_uris([uri], null);
+        } catch (e) {
+            logError(e, 'clippo: failed to open with the chosen app');
+        }
+    }
+
     disable() {
         // Close the popup first to release any modal grab.
         if (this._popup)
             this._popup.dismiss();
 
         this._removeKeybinding();
+        this._removeCycleKeybindings();
+        this._resetCycle();
         this._destroyIndicator();
 
         if (this._quickToggle) {
@@ -186,6 +228,11 @@ export default class ClippoExtension extends Extension {
         if (this._popup) {
             this._popup.destroy();
             this._popup = null;
+        }
+
+        if (this._cycleOsd) {
+            this._cycleOsd.destroy();
+            this._cycleOsd = null;
         }
 
         if (this._store) {
@@ -244,6 +291,29 @@ export default class ClippoExtension extends Extension {
         this._removedTrayBinding = false;
     }
 
+    // History-cycling shortcuts (paste next/previous). They default to empty in
+    // the schema (the store's review rules forbid a default clipboard shortcut),
+    // so they do nothing until the user assigns keys in preferences.
+    _addCycleKeybindings() {
+        Main.wm.addKeybinding(
+            CYCLE_NEXT,
+            this._settings,
+            Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
+            Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
+            () => this._cycle(1));
+        Main.wm.addKeybinding(
+            CYCLE_PREV,
+            this._settings,
+            Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
+            Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
+            () => this._cycle(-1));
+    }
+
+    _removeCycleKeybindings() {
+        Main.wm.removeKeybinding(CYCLE_NEXT);
+        Main.wm.removeKeybinding(CYCLE_PREV);
+    }
+
     _createIndicator() {
         if (this._indicator)
             return;
@@ -266,15 +336,58 @@ export default class ClippoExtension extends Extension {
     }
 
     _openAtPointer() {
+        this._resetCycle();
         const [x, y] = global.get_pointer();
         this._popup.refresh(this._store.getEntries());
         this._popup.show({ x, y });
     }
 
     _openFromActor(actor) {
+        this._resetCycle();
         const [bx, by] = actor.get_transformed_position();
         this._popup.refresh(this._store.getEntries());
         this._popup.show({ x: bx, y: by + actor.height });
+    }
+
+    // Switches the live clipboard to the next/previous history item without
+    // opening the full popup, showing a brief on-screen preview. The cycle
+    // position resets after a short idle, when something new is copied, or when
+    // the popup is opened (_resetCycle).
+    _cycle(delta) {
+        const entries = this._store.getEntries();
+        if (!entries.length)
+            return;
+        if (this._cycleIndex < 0)
+            this._cycleIndex = 0;
+        const n = entries.length;
+        this._cycleIndex = (this._cycleIndex + delta + n) % n;
+        const entry = entries[this._cycleIndex];
+        if (entry.type === 'text')
+            this._clipboard.setClipboard(entry.text);
+        else if (entry.type === 'image')
+            this._clipboard.setImage(this._store.absoluteImagePath(entry.imagePath), entry.mimetype);
+        this._cycleOsd.show(entries, this._cycleIndex);
+        this._armCycleReset();
+    }
+
+    _armCycleReset() {
+        if (this._cycleResetId)
+            GLib.Source.remove(this._cycleResetId);
+        this._cycleResetId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, CYCLE_RESET_MS, () => {
+            this._cycleResetId = 0;
+            this._cycleIndex = -1;
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    _resetCycle() {
+        this._cycleIndex = -1;
+        if (this._cycleResetId) {
+            GLib.Source.remove(this._cycleResetId);
+            this._cycleResetId = 0;
+        }
+        if (this._cycleOsd)
+            this._cycleOsd.dismiss();
     }
 
     _refreshPopup() {

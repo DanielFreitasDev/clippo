@@ -57,6 +57,13 @@ export default class ClippoPreferences extends ExtensionPreferences {
         behavior.add(detectRow);
         settings.bind('detect-types', detectRow, 'active', Gio.SettingsBindFlags.DEFAULT);
 
+        const persistRow = new Adw.SwitchRow({
+            title: _('Keep history across sessions'),
+            subtitle: _('When off, the history is wiped at logout and nothing is written to disk'),
+        });
+        behavior.add(persistRow);
+        settings.bind('persist-history', persistRow, 'active', Gio.SettingsBindFlags.DEFAULT);
+
         // --- Privacy ---
         const privacy = new Adw.PreferencesGroup({
             title: _('Privacy'),
@@ -131,36 +138,40 @@ export default class ClippoPreferences extends ExtensionPreferences {
         window.connect('destroy', () => settings.disconnect(excludedChangedId));
         refreshExcluded();
 
-        // --- Shortcut ---
+        // --- Shortcuts ---
         const shortcutGroup = new Adw.PreferencesGroup({
-            title: _('Shortcut'),
-            description: _('While Clippo is active it takes over Super+V (normally used by the message tray); Super+M keeps working.'),
+            title: _('Shortcuts'),
+            description: _('Click a row to set its shortcut; Backspace clears; Esc cancels. While Clippo uses Super+V it takes it from the message tray (Super+M keeps working). The cycling shortcuts are unset by default.'),
         });
         page.add(shortcutGroup);
 
-        const shortcutRow = new Adw.ActionRow({
-            title: _('Open history'),
-            subtitle: _('Click to set; Backspace clears; Esc cancels'),
-            activatable: true,
-        });
-        const shortcutLabel = new Gtk.ShortcutLabel({
+        this._addShortcutRow(shortcutGroup, window, settings, 'toggle-clippo',
+            _('Open history'), _('Open the history popup'));
+        this._addShortcutRow(shortcutGroup, window, settings, 'cycle-next',
+            _('Paste next item'), _('Switch the clipboard to the next history item'));
+        this._addShortcutRow(shortcutGroup, window, settings, 'cycle-previous',
+            _('Paste previous item'), _('Switch the clipboard to the previous history item'));
+    }
+
+    _addShortcutRow(group, window, settings, key, title, subtitle) {
+        const row = new Adw.ActionRow({ title, subtitle, activatable: true });
+        const label = new Gtk.ShortcutLabel({
             valign: Gtk.Align.CENTER,
             disabled_text: _('Disabled'),
         });
-        const syncLabel = () => {
-            const accels = settings.get_strv('toggle-clippo');
-            shortcutLabel.set_accelerator(accels.length ? accels[0] : '');
+        const sync = () => {
+            const accels = settings.get_strv(key);
+            label.set_accelerator(accels.length ? accels[0] : '');
         };
-        syncLabel();
-        const changedId = settings.connect('changed::toggle-clippo', syncLabel);
+        sync();
+        const changedId = settings.connect(`changed::${key}`, sync);
         window.connect('destroy', () => settings.disconnect(changedId));
-
-        shortcutRow.add_suffix(shortcutLabel);
-        shortcutRow.connect('activated', () => this._captureShortcut(window, settings));
-        shortcutGroup.add(shortcutRow);
+        row.add_suffix(label);
+        row.connect('activated', () => this._captureShortcut(window, settings, key));
+        group.add(row);
     }
 
-    _captureShortcut(parent, settings) {
+    _captureShortcut(parent, settings, key) {
         const dialog = new Adw.Dialog({
             title: _('New shortcut'),
             content_width: 380,
@@ -183,7 +194,7 @@ export default class ClippoPreferences extends ExtensionPreferences {
                 return Gdk.EVENT_STOP;
             }
             if (keyval === Gdk.KEY_BackSpace && mask === 0) {
-                settings.set_strv('toggle-clippo', []);
+                settings.set_strv(key, []);
                 dialog.close();
                 return Gdk.EVENT_STOP;
             }
@@ -195,7 +206,7 @@ export default class ClippoPreferences extends ExtensionPreferences {
 
             const accel = Gtk.accelerator_name(keyval, mask);
             if (accel)
-                settings.set_strv('toggle-clippo', [accel]);
+                settings.set_strv(key, [accel]);
             dialog.close();
             return Gdk.EVENT_STOP;
         });

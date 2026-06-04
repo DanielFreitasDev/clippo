@@ -15,13 +15,14 @@ history at the pointer with **Super+V**.
 - Auto-focused search bar: type to filter, clear it to return to the full list.
 - Keyboard navigation: **↑/↓** to move, **→** for item details, **Enter** to select, **Delete** to remove (**Shift+Delete** while searching), **Esc** to close.
 - Selecting an item puts it back on the clipboard (paste with **Ctrl+V**) and closes the window.
-- **Content-type detection:** links, colors, e-mails and code get a fitting icon/swatch, with a quick **open** action for links and e-mails.
+- **Content-type detection:** links, colors, e-mails and code get a fitting icon/swatch, with a quick **open** action — plus an **Open with…** chooser to pick the app — for links and e-mails.
 - **Edit before paste** and **QR code** generation for any text item (handy for sending a link to your phone).
-- **Pinned items (favorites):** click the star; they stay on top and never fall off the limit.
+- **Pinned items (favorites):** click the star; they stay on top and never fall off the limit. A header toggle filters the list to **pinned only**, and removing a pinned item asks for confirmation.
+- **Paste next / previous:** optional shortcuts cycle the clipboard through the history with an on-screen preview, without opening the popup. **Unset by default** — assign them in preferences.
 - **Privacy:** a **private mode** to pause capture (also a Quick Settings toggle); copies a password manager marks as secret are skipped; optional **per-app exclusion**; whitespace trimming; and optional primary-selection (middle-click) capture.
 - **Clear history:** the trash button (keeps the pinned items).
 - **Top-bar icon** (optional) to open it with the mouse.
-- Persists across logout/reboot in `~/.local/share/clippo/` (`600` permissions; images as separate PNGs).
+- Persists across logout/reboot in `~/.local/share/clippo/` (`600` permissions; images as separate PNGs) — or turn **“Keep history across sessions” off** to keep it in memory only and wipe it at logout (nothing written to disk).
 - Starts with your session (Shell extensions run at login — no autostart needed).
 - **Localized UI:** follows your system language — English and Brazilian Portuguese included, with English as the fallback.
 
@@ -57,7 +58,7 @@ Then:
 gnome-extensions prefs clippo@daniel.local
 ```
 
-Lets you adjust the number of items; toggle the top-bar icon, content-type detection, image capture, private mode, whitespace trimming and primary-selection capture; manage the excluded-apps list; and change the shortcut.
+Lets you adjust the number of items; toggle the top-bar icon, content-type detection, **keep-history-across-sessions**, image capture, private mode, whitespace trimming and primary-selection capture; manage the excluded-apps list; and set the shortcuts — open history, plus the optional **paste next / previous** cycling keys.
 
 ## Development
 
@@ -106,9 +107,10 @@ gnome-extensions install --force clippo@daniel.local.shell-extension.zip
 | `extension.js` | Lifecycle; wires monitor ↔ store ↔ popup ↔ icon ↔ quick toggle; shortcut. |
 | `lib/clipboardManager.js` | Watches the clipboard (`Meta.Selection`), emits `text-copied` / `image-copied`. |
 | `lib/historyStore.js` | History (text + image entries) in memory and in atomic JSON. |
-| `lib/clipboardPopup.js` | Popup UI: search, list, item-detail / edit / QR views, keyboard, modal grab. |
-| `lib/contentType.js` | Pure helpers: detect URL/color/e-mail/code and build safe action URIs. |
+| `lib/clipboardPopup.js` | Popup UI: search, list (pinned-only filter), item-detail / edit / QR / open-with / remove-confirm views, keyboard, modal grab. |
+| `lib/contentType.js` | Pure helpers: detect URL/color/e-mail/code, build safe action URIs, and the “open with” content type. |
 | `lib/quickToggle.js` | Quick Settings toggle for the private mode. |
+| `lib/cycleOsd.js` | On-screen preview shown while cycling the clipboard (paste next/previous). |
 | `lib/qrcodegen.js` | Vendored QR encoder (kazuhikoarase/qrcode-generator, MIT). |
 | `lib/indicator.js` | Top-bar icon. |
 | `prefs.js` | Preferences (libadwaita). |

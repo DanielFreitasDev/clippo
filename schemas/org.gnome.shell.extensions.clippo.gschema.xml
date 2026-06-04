@@ -64,5 +64,23 @@
       <description>Recognize links, colors and emails to show an icon and offer quick actions.</description>
     </key>
 
+    <key name="persist-history" type="b">
+      <default>true</default>
+      <summary>Keep history across sessions</summary>
+      <description>When off, the history is kept only in memory and is wiped when you log out; nothing is written to disk.</description>
+    </key>
+
+    <key name="cycle-next" type="as">
+      <default>[]</default>
+      <summary>Paste next history item</summary>
+      <description>Keyboard shortcut that switches the clipboard to the next item in the history. Unset by default.</description>
+    </key>
+
+    <key name="cycle-previous" type="as">
+      <default>[]</default>
+      <summary>Paste previous history item</summary>
+      <description>Keyboard shortcut that switches the clipboard to the previous item in the history. Unset by default.</description>
+    </key>
+
   </schema>
 </schemalist>

@@ -251,3 +251,63 @@ msgstr "Histórico da área de transferência"
 #: lib/quickToggle.js:21
 msgid "Pause clipboard history"
 msgstr "Pausar o histórico da área de transferência"
+
+#: lib/clipboardPopup.js
+msgid "Show pinned only"
+msgstr "Mostrar só os fixados"
+
+#: lib/clipboardPopup.js
+msgid "Open with…"
+msgstr "Abrir com…"
+
+#: lib/clipboardPopup.js
+msgid "Open with"
+msgstr "Abrir com"
+
+#: lib/clipboardPopup.js
+msgid "No application available"
+msgstr "Nenhum aplicativo disponível"
+
+#: lib/clipboardPopup.js
+msgid "Remove pinned item?"
+msgstr "Remover item fixado?"
+
+#: lib/clipboardPopup.js
+msgid "This item is pinned. Remove it from the history anyway?"
+msgstr "Este item está fixado. Remover do histórico mesmo assim?"
+
+#: prefs.js
+msgid "Keep history across sessions"
+msgstr "Manter histórico entre sessões"
+
+#: prefs.js
+msgid "When off, the history is wiped at logout and nothing is written to disk"
+msgstr "Quando desligado, o histórico é apagado ao sair da sessão e nada é gravado em disco"
+
+#: prefs.js
+msgid "Shortcuts"
+msgstr "Atalhos"
+
+#: prefs.js
+msgid "Click a row to set its shortcut; Backspace clears; Esc cancels. While Clippo uses Super+V it takes it from the message tray (Super+M keeps working). The cycling shortcuts are unset by default."
+msgstr "Clique numa linha para definir o atalho; Backspace limpa; Esc cancela. Enquanto o Clippo usa o Super+V, ele o assume da bandeja de mensagens (o Super+M continua funcionando). Os atalhos de rodízio vêm sem definição."
+
+#: prefs.js
+msgid "Open the history popup"
+msgstr "Abrir a janela do histórico"
+
+#: prefs.js
+msgid "Paste next item"
+msgstr "Colar próximo item"
+
+#: prefs.js
+msgid "Switch the clipboard to the next history item"
+msgstr "Mudar a área de transferência para o próximo item do histórico"
+
+#: prefs.js
+msgid "Paste previous item"
+msgstr "Colar item anterior"
+
+#: prefs.js
+msgid "Switch the clipboard to the previous history item"
+msgstr "Mudar a área de transferência para o item anterior do histórico"
