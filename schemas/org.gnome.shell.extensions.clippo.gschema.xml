@@ -85,5 +85,11 @@
       <description>Keyboard shortcut that switches the clipboard to the previous item in the history. Unset by default.</description>
     </key>
 
+    <key name="tray-super-v-removed" type="b">
+      <default>false</default>
+      <summary>Internal: Super+V was taken from the message tray</summary>
+      <description>Bookkeeping flag, not shown in preferences. Set while Clippo holds Super+V (which normally belongs to toggle-message-tray), so the binding can be handed back even after a crash or across sessions.</description>
+    </key>
+
   </schema>
 </schemalist>

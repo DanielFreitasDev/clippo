@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the clippo package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: clippo\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-04 14:58-0300\n"
+"POT-Creation-Date: 2026-07-11 20:35-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgid "Behavior"
 msgstr ""
 
 #: prefs.js:34
-msgid "History items"
+msgid "History Items"
 msgstr ""
 
 #: prefs.js:35
@@ -31,7 +31,7 @@ msgid "How many copies to keep (most recent first)"
 msgstr ""
 
 #: prefs.js:47
-msgid "Show icon in the top bar"
+msgid "Show Icon in the Top Bar"
 msgstr ""
 
 #: prefs.js:48
@@ -39,7 +39,7 @@ msgid "Open the history by clicking the icon, in addition to the shortcut"
 msgstr ""
 
 #: prefs.js:54
-msgid "Detect content type"
+msgid "Detect Content Type"
 msgstr ""
 
 #: prefs.js:55
@@ -47,244 +47,248 @@ msgid "Recognize links, colors and emails, and offer quick actions"
 msgstr ""
 
 #: prefs.js:61
-msgid "Keep history across sessions"
+msgid "Order by Recent Use"
 msgstr ""
 
 #: prefs.js:62
-msgid "When off, the history is wiped at logout and nothing is written to disk"
-msgstr ""
-
-#: prefs.js:69
-msgid "Privacy"
-msgstr ""
-
-#: prefs.js:70
-msgid "Control what gets captured into the history."
-msgstr ""
-
-#: prefs.js:75 lib/quickToggle.js:20
-msgid "Private mode"
-msgstr ""
-
-#: prefs.js:75
-msgid "Pause capturing new items"
-msgstr ""
-
-#: prefs.js:76
-msgid "Capture images"
-msgstr ""
-
-#: prefs.js:76
-msgid "Store copied images (PNG) in the history"
-msgstr ""
-
-#: prefs.js:77
-msgid "Trim whitespace"
-msgstr ""
-
-#: prefs.js:77
-msgid "Remove leading and trailing spaces and line breaks"
-msgstr ""
-
-#: prefs.js:78
-msgid "Capture the primary selection"
-msgstr ""
-
-#: prefs.js:78
-msgid "Also store text selected with the mouse (middle-click)"
-msgstr ""
-
-#: prefs.js:79
-msgid "Order by recent use"
-msgstr ""
-
-#: prefs.js:79
 msgid "Show recently used items first"
 msgstr ""
 
+#: prefs.js:68
+msgid "Trim Whitespace"
+msgstr ""
+
+#: prefs.js:69
+msgid "Remove leading and trailing spaces and line breaks"
+msgstr ""
+
+#: prefs.js:75
+msgid "Keep History Across Sessions"
+msgstr ""
+
+#: prefs.js:76
+msgid "When off, the history is wiped at logout and nothing is written to disk"
+msgstr ""
+
+#: prefs.js:83
+msgid "Privacy"
+msgstr ""
+
+#: prefs.js:84
+msgid "Control what gets captured into the history."
+msgstr ""
+
+#: prefs.js:89 lib/quickToggle.js:20
+msgid "Private Mode"
+msgstr ""
+
 #: prefs.js:89
-msgid "Excluded applications"
+msgid "Pause capturing new items"
 msgstr ""
 
 #: prefs.js:90
+msgid "Capture Images"
+msgstr ""
+
+#: prefs.js:90
+msgid "Store copied images (PNG) in the history"
+msgstr ""
+
+#: prefs.js:91
+msgid "Capture the Primary Selection"
+msgstr ""
+
+#: prefs.js:91
+msgid "Also store text selected with the mouse (middle-click)"
+msgstr ""
+
+#: prefs.js:101
+msgid "Excluded Applications"
+msgstr ""
+
+#: prefs.js:102
 msgid ""
 "Copies made while one of these apps is focused are not stored. Use its app "
 "id or window class, e.g. org.keepassxc.KeePassXC."
 msgstr ""
 
-#: prefs.js:94
-msgid "Add an app id…"
+#: prefs.js:106
+msgid "Add an App ID…"
 msgstr ""
 
-#: prefs.js:143
+#: prefs.js:155
 msgid "Shortcuts"
 msgstr ""
 
-#: prefs.js:144
+#: prefs.js:156
 msgid ""
 "Click a row to set its shortcut; Backspace clears; Esc cancels. All "
 "shortcuts are unset by default; if you choose Super+V, Clippo takes it from "
 "the message tray (Super+M keeps working)."
 msgstr ""
 
-#: prefs.js:149
-msgid "Open history"
+#: prefs.js:161
+msgid "Open History"
 msgstr ""
 
-#: prefs.js:149
+#: prefs.js:161
 msgid "Open the history popup"
 msgstr ""
 
-#: prefs.js:151
-msgid "Paste next item"
+#: prefs.js:163
+msgid "Paste Next Item"
 msgstr ""
 
-#: prefs.js:151
+#: prefs.js:163
 msgid "Switch the clipboard to the next history item"
 msgstr ""
 
-#: prefs.js:153
-msgid "Paste previous item"
+#: prefs.js:165
+msgid "Paste Previous Item"
 msgstr ""
 
-#: prefs.js:153
+#: prefs.js:165
 msgid "Switch the clipboard to the previous history item"
 msgstr ""
 
-#: prefs.js:160
+#: prefs.js:172
 msgid "Disabled"
 msgstr ""
 
-#: prefs.js:176
-msgid "New shortcut"
+#: prefs.js:188
+msgid "New Shortcut"
 msgstr ""
 
-#: prefs.js:181
+#: prefs.js:193
 msgid ""
 "Press the new key combination…\n"
 "\n"
 "Backspace to clear · Esc to cancel"
 msgstr ""
 
-#: lib/clipboardPopup.js:100
+#: lib/clipboardPopup.js:101
 msgid "Search…"
 msgstr ""
 
-#: lib/clipboardPopup.js:117
+#: lib/clipboardPopup.js:118
 msgid "Show pinned only"
 msgstr ""
 
-#: lib/clipboardPopup.js:127
+#: lib/clipboardPopup.js:128
 msgid "Clear history"
 msgstr ""
 
-#: lib/clipboardPopup.js:186
+#: lib/clipboardPopup.js:188
 msgid "No items in history"
 msgstr ""
 
-#: lib/clipboardPopup.js:206 lib/clipboardPopup.js:310 lib/cycleOsd.js:72
+#: lib/clipboardPopup.js:203
+msgid "No matching items"
+msgstr ""
+
+#: lib/clipboardPopup.js:217 lib/clipboardPopup.js:321 lib/cycleOsd.js:72
 msgid "Image"
 msgstr ""
 
-#: lib/clipboardPopup.js:237
+#: lib/clipboardPopup.js:248
 msgid "Send email"
 msgstr ""
 
-#: lib/clipboardPopup.js:237
+#: lib/clipboardPopup.js:248
 msgid "Open link"
 msgstr ""
 
-#: lib/clipboardPopup.js:246
+#: lib/clipboardPopup.js:257
 msgid "More actions"
 msgstr ""
 
-#: lib/clipboardPopup.js:257
+#: lib/clipboardPopup.js:268
 msgid "Unpin"
 msgstr ""
 
-#: lib/clipboardPopup.js:257
+#: lib/clipboardPopup.js:268
 msgid "Pin"
 msgstr ""
 
-#: lib/clipboardPopup.js:310 lib/cycleOsd.js:72
+#: lib/clipboardPopup.js:321 lib/cycleOsd.js:72
 #, javascript-format
 msgid "Image %s"
 msgstr ""
 
-#: lib/clipboardPopup.js:341
+#: lib/clipboardPopup.js:352
 msgid "just now"
 msgstr ""
 
-#: lib/clipboardPopup.js:344
+#: lib/clipboardPopup.js:355
 #, javascript-format
 msgid "%d minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/clipboardPopup.js:347
+#: lib/clipboardPopup.js:358
 #, javascript-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/clipboardPopup.js:350
+#: lib/clipboardPopup.js:361
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/clipboardPopup.js:367
+#: lib/clipboardPopup.js:378
 msgid "Back"
 msgstr ""
 
-#: lib/clipboardPopup.js:401
+#: lib/clipboardPopup.js:412
 msgid "Item"
 msgstr ""
 
-#: lib/clipboardPopup.js:431 lib/clipboardPopup.js:563
+#: lib/clipboardPopup.js:442 lib/clipboardPopup.js:574
 msgid "Edit"
 msgstr ""
 
-#: lib/clipboardPopup.js:433 lib/clipboardPopup.js:595
-msgid "QR code"
+#: lib/clipboardPopup.js:444 lib/clipboardPopup.js:606
+msgid "QR Code"
 msgstr ""
 
-#: lib/clipboardPopup.js:436
+#: lib/clipboardPopup.js:447
 msgid "Open"
 msgstr ""
 
-#: lib/clipboardPopup.js:437
-msgid "Open with…"
+#: lib/clipboardPopup.js:448
+msgid "Open With…"
 msgstr ""
 
-#: lib/clipboardPopup.js:440 lib/clipboardPopup.js:543
+#: lib/clipboardPopup.js:451 lib/clipboardPopup.js:554
 msgid "Remove"
 msgstr ""
 
-#: lib/clipboardPopup.js:460
-msgid "Open with"
+#: lib/clipboardPopup.js:471
+msgid "Open With"
 msgstr ""
 
-#: lib/clipboardPopup.js:471
+#: lib/clipboardPopup.js:482
 msgid "No application available"
 msgstr ""
 
-#: lib/clipboardPopup.js:533
-msgid "Remove pinned item?"
+#: lib/clipboardPopup.js:544
+msgid "Remove Pinned Item?"
 msgstr ""
 
-#: lib/clipboardPopup.js:537
+#: lib/clipboardPopup.js:548
 msgid "This item is pinned. Remove it from the history anyway?"
 msgstr ""
 
-#: lib/clipboardPopup.js:548 lib/clipboardPopup.js:580
+#: lib/clipboardPopup.js:559 lib/clipboardPopup.js:591
 msgid "Cancel"
 msgstr ""
 
-#: lib/clipboardPopup.js:574
+#: lib/clipboardPopup.js:585
 msgid "Save"
 msgstr ""
 

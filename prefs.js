@@ -31,7 +31,7 @@ export default class ClippoPreferences extends ExtensionPreferences {
         page.add(behavior);
 
         const maxRow = new Adw.SpinRow({
-            title: _('History items'),
+            title: _('History Items'),
             subtitle: _('How many copies to keep (most recent first)'),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
@@ -44,21 +44,35 @@ export default class ClippoPreferences extends ExtensionPreferences {
         settings.bind('max-items', maxRow, 'value', Gio.SettingsBindFlags.DEFAULT);
 
         const indicatorRow = new Adw.SwitchRow({
-            title: _('Show icon in the top bar'),
+            title: _('Show Icon in the Top Bar'),
             subtitle: _('Open the history by clicking the icon, in addition to the shortcut'),
         });
         behavior.add(indicatorRow);
         settings.bind('show-indicator', indicatorRow, 'active', Gio.SettingsBindFlags.DEFAULT);
 
         const detectRow = new Adw.SwitchRow({
-            title: _('Detect content type'),
+            title: _('Detect Content Type'),
             subtitle: _('Recognize links, colors and emails, and offer quick actions'),
         });
         behavior.add(detectRow);
         settings.bind('detect-types', detectRow, 'active', Gio.SettingsBindFlags.DEFAULT);
 
+        const orderRow = new Adw.SwitchRow({
+            title: _('Order by Recent Use'),
+            subtitle: _('Show recently used items first'),
+        });
+        behavior.add(orderRow);
+        settings.bind('order-by-recent-use', orderRow, 'active', Gio.SettingsBindFlags.DEFAULT);
+
+        const trimRow = new Adw.SwitchRow({
+            title: _('Trim Whitespace'),
+            subtitle: _('Remove leading and trailing spaces and line breaks'),
+        });
+        behavior.add(trimRow);
+        settings.bind('trim-whitespace', trimRow, 'active', Gio.SettingsBindFlags.DEFAULT);
+
         const persistRow = new Adw.SwitchRow({
-            title: _('Keep history across sessions'),
+            title: _('Keep History Across Sessions'),
             subtitle: _('When off, the history is wiped at logout and nothing is written to disk'),
         });
         behavior.add(persistRow);
@@ -72,11 +86,9 @@ export default class ClippoPreferences extends ExtensionPreferences {
         page.add(privacy);
 
         const switches = [
-            ['private-mode', _('Private mode'), _('Pause capturing new items')],
-            ['capture-images', _('Capture images'), _('Store copied images (PNG) in the history')],
-            ['trim-whitespace', _('Trim whitespace'), _('Remove leading and trailing spaces and line breaks')],
-            ['capture-primary', _('Capture the primary selection'), _('Also store text selected with the mouse (middle-click)')],
-            ['order-by-recent-use', _('Order by recent use'), _('Show recently used items first')],
+            ['private-mode', _('Private Mode'), _('Pause capturing new items')],
+            ['capture-images', _('Capture Images'), _('Store copied images (PNG) in the history')],
+            ['capture-primary', _('Capture the Primary Selection'), _('Also store text selected with the mouse (middle-click)')],
         ];
         for (const [key, title, subtitle] of switches) {
             const row = new Adw.SwitchRow({ title, subtitle });
@@ -86,12 +98,12 @@ export default class ClippoPreferences extends ExtensionPreferences {
 
         // --- Excluded apps ---
         const excluded = new Adw.PreferencesGroup({
-            title: _('Excluded applications'),
+            title: _('Excluded Applications'),
             description: _('Copies made while one of these apps is focused are not stored. Use its app id or window class, e.g. org.keepassxc.KeePassXC.'),
         });
         page.add(excluded);
 
-        const addRow = new Adw.EntryRow({ title: _('Add an app id…') });
+        const addRow = new Adw.EntryRow({ title: _('Add an App ID…') });
         const addButton = new Gtk.Button({
             icon_name: 'list-add-symbolic',
             valign: Gtk.Align.CENTER,
@@ -146,11 +158,11 @@ export default class ClippoPreferences extends ExtensionPreferences {
         page.add(shortcutGroup);
 
         this._addShortcutRow(shortcutGroup, window, settings, 'toggle-clippo',
-            _('Open history'), _('Open the history popup'));
+            _('Open History'), _('Open the history popup'));
         this._addShortcutRow(shortcutGroup, window, settings, 'cycle-next',
-            _('Paste next item'), _('Switch the clipboard to the next history item'));
+            _('Paste Next Item'), _('Switch the clipboard to the next history item'));
         this._addShortcutRow(shortcutGroup, window, settings, 'cycle-previous',
-            _('Paste previous item'), _('Switch the clipboard to the previous history item'));
+            _('Paste Previous Item'), _('Switch the clipboard to the previous history item'));
     }
 
     _addShortcutRow(group, window, settings, key, title, subtitle) {
@@ -173,7 +185,7 @@ export default class ClippoPreferences extends ExtensionPreferences {
 
     _captureShortcut(parent, settings, key) {
         const dialog = new Adw.Dialog({
-            title: _('New shortcut'),
+            title: _('New Shortcut'),
             content_width: 380,
             content_height: 140,
         });
@@ -198,10 +210,12 @@ export default class ClippoPreferences extends ExtensionPreferences {
                 dialog.close();
                 return Gdk.EVENT_STOP;
             }
-            // expect a "real" key together with a modifier
+            // expect a "real" key together with a modifier — except function
+            // keys, which are fine on their own (as in GNOME Settings); any
+            // other bare key would hijack normal typing.
             if (MODIFIER_KEYVALS.includes(keyval))
                 return Gdk.EVENT_STOP;
-            if (mask === 0)
+            if (mask === 0 && (keyval < Gdk.KEY_F1 || keyval > Gdk.KEY_F35))
                 return Gdk.EVENT_STOP;
 
             const accel = Gtk.accelerator_name(keyval, mask);

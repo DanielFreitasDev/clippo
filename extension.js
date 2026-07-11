@@ -28,6 +28,9 @@ const CYCLE_RESET_MS = 1500;
 const SHELL_KB_SCHEMA = 'org.gnome.shell.keybindings';
 const TRAY_KEY = 'toggle-message-tray';
 const SUPER_V = '<Super>v';
+// Our own (hidden) key persisting that we took <Super>v from the message tray,
+// so the hand-back survives sessions and crashes, not just a clean disable().
+const TRAY_REMOVED_KEY = 'tray-super-v-removed';
 
 export default class ClippoExtension extends Extension {
     enable() {
@@ -63,7 +66,7 @@ export default class ClippoExtension extends Extension {
                 this._clipboard.setClipboard(entry.text);
             else if (entry.type === 'image')
                 this._clipboard.setImage(this._store.absoluteImagePath(entry.imagePath), entry.mimetype);
-            this._store.touch(id); // move the chosen item to the top
+            this._store.touch(id); // refresh its last-use time
         });
         this._popup.connect('item-pin-toggled', (_p, id) => {
             this._store.togglePin(id);
@@ -131,6 +134,9 @@ export default class ClippoExtension extends Extension {
             }),
             this._settings.connect('changed::persist-history', () => {
                 this._store.setPersist(this._settings.get_boolean('persist-history'));
+                // The image base dir may have moved (disk <-> runtime tmpfs).
+                this._popup.dataDir = this._store.dataDir();
+                this._refreshPopup();
             }),
         ];
     }
@@ -245,7 +251,6 @@ export default class ClippoExtension extends Extension {
 
     _addKeybinding() {
         this._shellKb = new Gio.Settings({ schema_id: SHELL_KB_SCHEMA });
-        this._removedTrayBinding = false;
         // Only take <Super>v from the message tray while Clippo is actually bound
         // to it; re-check whenever the user edits the shortcut at runtime.
         this._reconcileTrayConflict();
@@ -268,11 +273,11 @@ export default class ClippoExtension extends Extension {
         const tray = this._shellKb.get_strv(TRAY_KEY);
         if (weUseSuperV && tray.includes(SUPER_V)) {
             this._shellKb.set_strv(TRAY_KEY, tray.filter(a => a !== SUPER_V));
-            this._removedTrayBinding = true;
-        } else if (!weUseSuperV && this._removedTrayBinding) {
+            this._settings.set_boolean(TRAY_REMOVED_KEY, true);
+        } else if (!weUseSuperV && this._settings.get_boolean(TRAY_REMOVED_KEY)) {
             if (!tray.includes(SUPER_V))
                 this._shellKb.set_strv(TRAY_KEY, [...tray, SUPER_V]);
-            this._removedTrayBinding = false;
+            this._settings.set_boolean(TRAY_REMOVED_KEY, false);
         }
     }
 
@@ -282,13 +287,13 @@ export default class ClippoExtension extends Extension {
             this._settings.disconnect(this._toggleClippoId);
             this._toggleClippoId = 0;
         }
-        if (this._shellKb && this._removedTrayBinding) {
+        if (this._shellKb && this._settings.get_boolean(TRAY_REMOVED_KEY)) {
             const tray = this._shellKb.get_strv(TRAY_KEY);
             if (!tray.includes(SUPER_V))
                 this._shellKb.set_strv(TRAY_KEY, [...tray, SUPER_V]);
+            this._settings.set_boolean(TRAY_REMOVED_KEY, false);
         }
         this._shellKb = null;
-        this._removedTrayBinding = false;
     }
 
     // History-cycling shortcuts (paste next/previous). They default to empty in
